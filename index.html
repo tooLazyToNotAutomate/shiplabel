@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>ShipLabel Studio — E-Commerce Shipping Label Manager</title>
   <link rel="stylesheet" href="styles.css">
   
@@ -121,7 +121,7 @@
           <h1 class="page-title">Template Manager (Learn System)</h1>
           <p class="page-desc">Create and manage custom label crop templates for your marketplace PDFs.</p>
         </div>
-        <div style="display: flex; gap: 10px;">
+        <div class="header-actions">
           <button class="btn btn-secondary" id="btn-export-templates">📤 Export JSON</button>
           <button class="btn btn-secondary" id="btn-import-templates">📥 Import JSON</button>
           <input type="file" id="import-templates-file" accept=".json" style="display:none;">
@@ -388,7 +388,7 @@
           </div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
           <div style="font-size: 12px; font-weight: 600; color: var(--primary);">
             💡 Drag mouse on sample PDF to draw crop box, or use a quick preset:
           </div>

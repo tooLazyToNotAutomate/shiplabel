@@ -155,7 +155,7 @@ class App {
         const view = item.getAttribute("data-view");
         this.switchView(view);
         // Close sidebar on mobile after clicking
-        if (window.innerWidth <= 768) {
+        if (window.innerWidth <= 900) {
           toggleSidebar(false);
         }
       });
@@ -164,6 +164,9 @@ class App {
 
   switchView(viewName) {
     this.currentView = viewName;
+    window.scrollTo(0, 0);
+    const main = document.getElementById("main-content");
+    if (main) main.scrollTop = 0;
     document.querySelectorAll(".nav-item").forEach(item => {
       item.classList.toggle("active", item.getAttribute("data-view") === viewName);
     });
