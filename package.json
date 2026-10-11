@@ -1,5 +1,9 @@
 {
-  "dependencies": {
-    "pdf-lib": "^1.17.1"
+  "name": "shiplabel-studio",
+  "private": true,
+  "scripts": {
+    "build:web": "node scripts/build.js web",
+    "build:android": "node scripts/build.js android",
+    "serve:web": "python web/server.py"
   }
 }

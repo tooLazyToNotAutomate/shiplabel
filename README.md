@@ -52,9 +52,11 @@ ShipLabel Studio
  │    ├── main_window.py      -> Responsive sidebar layout container
  │    └── views/              -> Dashboard, Templates, Process, Batch, Settings
  └── Web Studio (100% Client-Side JS)
-      ├── index.html          -> Responsive web user interface
-      ├── js/pdf_engine.js    -> Client-side PDF-Lib & PDF.js pipeline
-      └── js/crop_canvas.js   -> Interactive HTML5 Canvas crop box editor
+      ├── web/index.html          -> Responsive web user interface
+      ├── shared/js/pdf_engine.js -> Client-side PDF-Lib & PDF.js pipeline (shared with Android)
+      └── web/js/crop_canvas.js   -> Interactive HTML5 Canvas crop box editor
+ └── Android App (Capacitor)
+      └── android/                -> Mobile UI + native shell (see android/README.md)
 ```
 
 ---
@@ -79,9 +81,9 @@ Customer addresses and phone numbers are sensitive PII (Personally Identifiable 
 
 ### Option A: Web Studio (Browser — Zero Installation)
 
-1. Simply double-click `index.html` in your web browser, OR launch the built-in local server:
+1. Launch the built-in local server:
    ```bash
-   python server.py
+   python web/server.py
    ```
 2. Open your web browser at `http://localhost:8000`.
 3. Drag & drop your shipping PDFs, select your template or let Smart Auto-Detect handle it, and click **Process & Download**.
@@ -99,10 +101,11 @@ Customer addresses and phone numbers are sensitive PII (Personally Identifiable 
    ```
 2. Install Python dependencies:
    ```bash
-   pip install -r requirements.txt
+   pip install -r desktop/requirements.txt
    ```
 3. Run the desktop application:
    ```bash
+   cd desktop
    python main.py
    ```
 
@@ -164,28 +167,27 @@ Both interfaces (the Web Studio in `styles.css` and the Desktop GUI in `ui/theme
 
 ```
 LABELPDF/
-├── core/                  # Core Python rendering & batch engine
-│   ├── batch_processor.py
-│   ├── output_engine.py
-│   ├── pdf_engine.py
-│   └── template_manager.py
-├── ui/                    # CustomTkinter Desktop GUI
-│   ├── views/             # Desktop views (dashboard, process, batch, templates)
-│   ├── widgets/           # Desktop widgets (crop canvas, drag-drop zone)
-│   ├── main_window.py
-│   └── sidebar.py
-├── js/                    # Client-side Web Studio JS logic
-│   ├── app.js
-│   ├── crop_canvas.js
-│   ├── pdf_engine.js
-│   └── template_manager.js
-├── data/
-│   └── templates.json     # Saved template definitions
-├── index.html             # Web Studio main entrypoint
-├── server.py              # Local HTTP development server
-├── main.py                # Desktop GUI main entrypoint
-└── requirements.txt       # Python dependencies
+├── web/                   # Web Studio (deployed to Vercel)
+│   ├── index.html
+│   ├── styles.css
+│   ├── js/                # app.js, crop_canvas.js (web UI only)
+│   └── server.py          # Local dev server (also serves ../shared)
+├── android/               # Android app (Capacitor), see android/README.md
+│   ├── src/               # ui/, components/, pages/, js/ (mobile UI)
+│   └── native/            # Generated Android Studio project
+├── desktop/               # Python desktop app
+│   ├── core/              # PDF / batch / output / template engine
+│   ├── ui/                # CustomTkinter views & widgets
+│   └── tests/  data/  main.py  requirements.txt
+├── shared/                # JS engine used by web AND android
+│   ├── js/                # pdf_engine.js, template_manager.js, security.js
+│   └── vendor/            # pdf-lib, pdf.js, JSZip (self-hosted)
+├── scripts/build.js       # Combines web/ or android/src with shared/
+├── vercel.json            # Builds web/ + shared/ into dist/web
+└── package.json
 ```
+
+Run from the right folder: `python web/server.py` (web), `cd desktop && python main.py` (desktop), `cd android && npm run apk` (Android).
 
 ---
 

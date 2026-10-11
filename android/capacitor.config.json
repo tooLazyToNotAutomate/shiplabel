@@ -1,0 +1,12 @@
+{
+  "appId": "com.shiplabel.studio",
+  "appName": "ShipLabel Studio",
+  "webDir": "www",
+  "android": {
+    "path": "native",
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

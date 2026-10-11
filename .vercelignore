@@ -1,15 +1,6 @@
-core/
-ui/
-tests/
-data/
+desktop/
+android/
 outputs/
 node_modules/
-main.py
-server.py
-requirements.txt
-package.json
-package-lock.json
 README.md
 *.pdf
-.pytest_cache/
-__pycache__/

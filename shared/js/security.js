@@ -109,7 +109,7 @@ const Security = {
       const f = files[i];
       if (i >= Security.MAX_FILES) { overCount++; continue; }
       if (!f.name.toLowerCase().endsWith(".pdf")) {
-        errors.push(`"${f.name}" skipped: only .pdf files are supported.`);
+        errors.push(`"${f.name}" skipped: ${f.name.includes(".") ? "it is a ." + f.name.split(".").pop().slice(0, 10).toLowerCase() + " file" : "it has no file extension"}. Only PDF files whose name ends in ".pdf" (for example label.pdf or invoice_123.pdf) are accepted.`);
         continue;
       }
       if (f.size === 0) { errors.push(`"${f.name}" skipped: the file is empty.`); continue; }
@@ -122,7 +122,7 @@ const Security = {
         const head = new Uint8Array(await f.slice(0, 1024).arrayBuffer());
         const text = String.fromCharCode(...head);
         if (!text.includes("%PDF-")) {
-          errors.push(`"${f.name}" skipped: it is named .pdf but is not a real PDF (it may be a renamed image, document or damaged download). Re-download it from the marketplace.`);
+          errors.push(`"${f.name}" skipped: its name ends in ".pdf" but the contents are not a real PDF (it may be a renamed image or Word file, or a damaged download). Only genuine PDF files named like label.pdf or invoice_123.pdf are accepted. Please download the label again from the marketplace.`);
           continue;
         }
       } catch (e) {

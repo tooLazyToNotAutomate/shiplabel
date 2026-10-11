@@ -4,7 +4,7 @@
 
 // pdf.js hardening: no eval of font programs (CVE-2024-4367), same-origin worker only
 if (window.pdfjsLib) {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = "vendor/pdf.worker.min.js";
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "shared/vendor/pdf.worker.min.js";
 }
 const PDFJS_SAFE_OPTS = { isEvalSupported: false, enableXfa: false };
 

@@ -1,0 +1,24 @@
+/* ShipLabel Android — design tokens (same navy & blue palette as the web app). */
+:root {
+  --navy: #1b1b39;
+  --blue: #3965fa;
+  --blue-press: #2a4fd6;
+  --soft-blue: #99b7fc;
+  --pale-blue: #e9ebff;
+  --bg: #f5f6ff;
+  --card: #ffffff;
+  --border: #dde0f2;
+  --text: #1b1b39;
+  --text-2: #4a4d6b;
+  --text-muted: #6b6f8f;
+  --success: #047857;
+  --success-bg: #ecfdf5;
+  --danger: #b91c1c;
+  --danger-bg: #fef2f2;
+  --radius: 14px;
+  --radius-sm: 10px;
+  --appbar-h: 56px;
+  --nav-h: 64px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}

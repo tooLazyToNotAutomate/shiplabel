@@ -1,0 +1,24 @@
+{
+  "name": "shiplabel-android",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ShipLabel Studio Android app (Capacitor)",
+  "scripts": {
+    "build": "node ../scripts/build.js android",
+    "sync": "npm run build && cap sync android",
+    "open": "cap open android",
+    "run": "npm run sync && cap run android",
+    "apk": "npm run sync && cd native && gradlew.bat assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/filesystem": "^8.1.4",
+    "@capacitor/share": "^8.0.3",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.4"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.3"
+  }
+}

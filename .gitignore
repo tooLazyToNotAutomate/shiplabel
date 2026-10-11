@@ -7,3 +7,14 @@ __pycache__/
 *.png
 !assets/
 imges,notes.docs/
+
+# build output
+dist/
+android/www/
+android/node_modules/
+android/native/local.properties
+android/native/build/
+android/native/app/build/
+android/native/.gradle/
+android/native/capacitor-cordova-android-plugins/
+!android/native/app/src/main/res/**/*.png
