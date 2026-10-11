@@ -5,15 +5,15 @@ from typing import Callable
 class Sidebar(ctk.CTkFrame):
     """
     Left Navigation Sidebar for ShipLabel Studio.
-    Light commercial theme with active state highlighting.
+    Dark navy theme with active state highlighting.
     """
 
     def __init__(self, master, on_navigate: Callable[[str], None], **kwargs):
         super().__init__(
             master,
             fg_color=theme.COLOR_BG_SIDEBAR,
-            border_color=theme.COLOR_BORDER,
-            border_width=1,
+            border_width=0,
+            corner_radius=0,
             width=220,
             **kwargs
         )
@@ -25,25 +25,34 @@ class Sidebar(ctk.CTkFrame):
         self.brand_frame = ctk.CTkFrame(self, fg_color="transparent")
         self.brand_frame.pack(fill="x", padx=16, pady=(20, 24))
 
-        self.logo_icon = ctk.CTkLabel(self.brand_frame, text="🏷️", font=(theme.FONT_FAMILY, 24))
-        self.logo_icon.pack(side="left", padx=(0, 8))
+        self.logo_icon = ctk.CTkLabel(
+            self.brand_frame,
+            text="SL",
+            width=32,
+            height=32,
+            corner_radius=8,
+            fg_color=theme.COLOR_PRIMARY,
+            text_color=theme.COLOR_PRIMARY_TEXT,
+            font=(theme.FONT_FAMILY, 13, "bold")
+        )
+        self.logo_icon.pack(side="left", padx=(0, 10))
 
         self.logo_text = ctk.CTkLabel(
             self.brand_frame,
             text="ShipLabel",
             font=(theme.FONT_FAMILY, 18, "bold"),
-            text_color=theme.COLOR_TEXT_PRIMARY
+            text_color=theme.COLOR_PRIMARY_TEXT
         )
         self.logo_text.pack(side="left")
 
         # Nav Items
         nav_items = [
-            ("dashboard", "📊  Dashboard"),
-            ("templates", "📐  Templates"),
-            ("process", "🏷️  Process Labels"),
-            ("batch", "⚡  Batch Processor"),
-            ("settings", "⚙️  Settings"),
-            ("about", "ℹ️  About"),
+            ("dashboard", "Dashboard"),
+            ("templates", "Templates"),
+            ("process", "Process Labels"),
+            ("batch", "Batch Processor"),
+            ("settings", "Settings"),
+            ("about", "About"),
         ]
 
         for key, label in nav_items:
@@ -53,8 +62,8 @@ class Sidebar(ctk.CTkFrame):
                 anchor="w",
                 font=(theme.FONT_FAMILY, 13, "bold" if key == "dashboard" else "normal"),
                 fg_color=theme.COLOR_PRIMARY if key == "dashboard" else "transparent",
-                text_color=theme.COLOR_PRIMARY_TEXT if key == "dashboard" else theme.COLOR_TEXT_PRIMARY,
-                hover_color=theme.COLOR_PRIMARY_HOVER if key == "dashboard" else theme.COLOR_BG_HOVER,
+                text_color=theme.COLOR_PRIMARY_TEXT if key == "dashboard" else theme.COLOR_SIDEBAR_TEXT,
+                hover_color=theme.COLOR_PRIMARY_HOVER if key == "dashboard" else theme.COLOR_SIDEBAR_HOVER,
                 height=40,
                 corner_radius=6,
                 command=lambda k=key: self.select_view(k)
@@ -75,8 +84,8 @@ class Sidebar(ctk.CTkFrame):
             else:
                 btn.configure(
                     fg_color="transparent",
-                    text_color=theme.COLOR_TEXT_PRIMARY,
-                    hover_color=theme.COLOR_BG_HOVER,
+                    text_color=theme.COLOR_SIDEBAR_TEXT,
+                    hover_color=theme.COLOR_SIDEBAR_HOVER,
                     font=(theme.FONT_FAMILY, 13, "normal")
                 )
         self.on_navigate(view_name)

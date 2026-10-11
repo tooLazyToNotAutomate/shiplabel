@@ -52,7 +52,7 @@ class ProcessView(ctk.CTkFrame):
 
         ctk.CTkLabel(
             self.tmpl_card,
-            text="📐 Select Crop Template",
+            text="Select Crop Template",
             font=(theme.FONT_FAMILY, 14, "bold"),
             text_color=theme.COLOR_TEXT_PRIMARY
         ).pack(anchor="w", padx=16, pady=(14, 6))
@@ -70,10 +70,10 @@ class ProcessView(ctk.CTkFrame):
 
         self.btn_auto_match = ctk.CTkButton(
             self.tmpl_frame,
-            text="🔍 Auto-Detect Template",
+            text="Auto-Detect Template",
             fg_color=theme.COLOR_BG_HOVER,
             text_color=theme.COLOR_TEXT_PRIMARY,
-            hover_color="#E2E8F0",
+            hover_color=theme.COLOR_BG_HOVER,
             border_color=theme.COLOR_BORDER,
             border_width=1,
             corner_radius=6,
@@ -93,7 +93,7 @@ class ProcessView(ctk.CTkFrame):
 
         ctk.CTkLabel(
             self.output_card,
-            text="🖨️ Output Format Settings",
+            text="Output Format Settings",
             font=(theme.FONT_FAMILY, 14, "bold"),
             text_color=theme.COLOR_TEXT_PRIMARY
         ).pack(anchor="w", padx=16, pady=(14, 6))
@@ -137,7 +137,7 @@ class ProcessView(ctk.CTkFrame):
 
         self.btn_process = ctk.CTkButton(
             self.action_card,
-            text="🚀 Process & Export Labels",
+            text="Process & Export Labels",
             fg_color=theme.COLOR_PRIMARY,
             hover_color=theme.COLOR_PRIMARY_HOVER,
             font=(theme.FONT_FAMILY, 14, "bold"),

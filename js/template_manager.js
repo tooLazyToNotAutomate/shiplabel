@@ -61,24 +61,39 @@ class TemplateManager {
   }
 
   init() {
-    const stored = localStorage.getItem(this.storageKey);
+    const stored = Security.storageGet(this.storageKey);
     if (stored) {
       try {
-        this.templates = JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        if (!Array.isArray(parsed)) throw new Error("not an array");
+        // Never trust stored data: re-validate every template
+        this.templates = parsed.slice(0, Security.MAX_TEMPLATES).map(t => {
+          const clean = Security.sanitizeTemplate(t);
+          if (clean && !clean.id) clean.id = this.newId();
+          return clean;
+        }).filter(Boolean);
+        if (this.templates.length === 0) throw new Error("no valid templates");
       } catch (e) {
         console.error("Template parse error:", e);
-        this.templates = [...DEFAULT_TEMPLATES];
+        this.templates = DEFAULT_TEMPLATES.map(t => ({ ...t }));
         this.save();
       }
     } else {
       // Fresh install or version bump — load updated defaults
-      this.templates = [...DEFAULT_TEMPLATES];
+      this.templates = DEFAULT_TEMPLATES.map(t => ({ ...t }));
       this.save();
     }
   }
 
+  newId() {
+    const rand = (window.crypto && crypto.getRandomValues)
+      ? Array.from(crypto.getRandomValues(new Uint8Array(6)), b => b.toString(16).padStart(2, "0")).join("")
+      : Math.random().toString(16).slice(2, 14);
+    return "tmpl_" + Date.now() + "_" + rand;
+  }
+
   save() {
-    localStorage.setItem(this.storageKey, JSON.stringify(this.templates));
+    Security.storageSet(this.storageKey, JSON.stringify(this.templates));
   }
 
   getAll() {
@@ -90,17 +105,13 @@ class TemplateManager {
   }
 
   addTemplate(name, marketplace, cropRect, labelSize = "3x5") {
-    const newTmpl = {
-      id: "tmpl_" + Date.now(),
-      name,
-      marketplace,
-      cropRect,
-      labelSize,
-      createdAt: new Date().toISOString()
-    };
-    this.templates.push(newTmpl);
+    if (this.templates.length >= Security.MAX_TEMPLATES) return null;
+    const clean = Security.sanitizeTemplate({ name, marketplace, cropRect, labelSize });
+    if (!clean) return null;
+    clean.id = this.newId();
+    this.templates.push(clean);
     this.save();
-    return newTmpl;
+    return clean;
   }
 
   deleteTemplate(id) {

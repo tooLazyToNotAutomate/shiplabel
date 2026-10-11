@@ -31,7 +31,7 @@ class TemplatesView(ctk.CTkFrame):
 
         self.btn_create = ctk.CTkButton(
             self.top_bar,
-            text="➕ Create New Template",
+            text="Create New Template",
             fg_color=theme.COLOR_PRIMARY,
             hover_color=theme.COLOR_PRIMARY_HOVER,
             font=(theme.FONT_FAMILY, 12, "bold"),
@@ -106,10 +106,10 @@ class TemplatesView(ctk.CTkFrame):
         # Actions
         btn_del = ctk.CTkButton(
             card,
-            text="🗑️ Delete",
-            fg_color="#FEE2E2",
+            text="Delete",
+            fg_color=theme.COLOR_DANGER_BG,
             text_color=theme.COLOR_DANGER,
-            hover_color="#FCA5A5",
+            hover_color=theme.COLOR_DANGER_HOVER,
             width=80,
             height=30,
             font=(theme.FONT_FAMILY, 11, "bold"),
@@ -164,7 +164,7 @@ class TemplatesView(ctk.CTkFrame):
         # Instruction banner
         inst_lbl = ctk.CTkLabel(
             dlg,
-            text="💡 Draw a rectangle around the shipping label on the page below using your mouse.",
+            text="Draw a rectangle around the shipping label on the page below using your mouse.",
             font=(theme.FONT_FAMILY, 12, "bold"),
             text_color=theme.COLOR_PRIMARY
         )
@@ -210,7 +210,7 @@ class TemplatesView(ctk.CTkFrame):
 
         btn_save = ctk.CTkButton(
             btn_bar,
-            text="💾 Save Crop Template",
+            text="Save Crop Template",
             fg_color=theme.COLOR_SUCCESS,
             hover_color="#047857",
             font=(theme.FONT_FAMILY, 12, "bold"),
@@ -224,7 +224,7 @@ class TemplatesView(ctk.CTkFrame):
             text="Cancel",
             fg_color=theme.COLOR_BG_HOVER,
             text_color=theme.COLOR_TEXT_PRIMARY,
-            hover_color="#E2E8F0",
+            hover_color=theme.COLOR_BG_HOVER,
             height=36,
             command=dlg.destroy
         )

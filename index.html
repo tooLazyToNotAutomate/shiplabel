@@ -3,65 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1b1b39">
   <title>ShipLabel Studio — E-Commerce Shipping Label Manager</title>
   <link rel="stylesheet" href="styles.css">
-  
-  <!-- PDF Processing Libraries (Client-side, 100% Offline) -->
-  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script>
-    if (window.pdfjsLib) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    }
-  </script>
+
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+
+  <!-- PDF libraries are self-hosted (same-origin, no third-party CDN) -->
+  <script src="vendor/pdf-lib.min.js"></script>
+  <script src="vendor/pdf.min.js"></script>
+  <script src="vendor/jszip.min.js"></script>
 </head>
 <body>
+
+  <!-- Icon sprite (inline, CSP-safe) -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"/><circle cx="7.5" cy="7.5" r="1.3"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></symbol>
+    <symbol id="i-crop" viewBox="0 0 24 24"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></symbol>
+    <symbol id="i-printer" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="9" rx="2"/><path d="M6 15h12v6H6z"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v12M7 11l5 5 5-5"/><path d="M4 18a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2"/></symbol>
+    <symbol id="i-files" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6"/><path d="m6 7 1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h11l4 4v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></symbol>
+    <symbol id="i-half" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 12h16"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3Z"/></symbol>
+  </svg>
 
   <!-- Mobile Header -->
   <header id="mobile-header" class="mobile-header">
     <div class="brand">
-      <span class="brand-icon">🏷️</span>
+      <span class="brand-icon"><svg class="icon"><use href="#i-tag"/></svg></span>
       <span class="brand-title">ShipLabel</span>
     </div>
-    <button id="mobile-menu-btn" class="btn btn-secondary" style="padding: 4px 8px; font-size: 18px;">☰</button>
+    <button type="button" id="mobile-menu-btn" class="btn menu-btn" aria-label="Open navigation menu"><svg class="icon"><use href="#i-menu"/></svg></button>
   </header>
 
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
   <!-- Navigation Sidebar -->
-  <aside id="sidebar">
+  <aside id="sidebar" aria-label="Main navigation">
     <div class="sidebar-header">
       <div class="brand">
-        <span class="brand-icon">🏷️</span>
+        <span class="brand-icon"><svg class="icon"><use href="#i-tag"/></svg></span>
         <span class="brand-title">ShipLabel</span>
       </div>
-      <button id="sidebar-close-btn" class="btn btn-secondary mobile-only" style="padding: 4px 8px; font-size: 14px;">✕</button>
+      <button type="button" id="sidebar-close-btn" class="btn sidebar-close mobile-only" aria-label="Close navigation menu"><svg class="icon"><use href="#i-x"/></svg></button>
     </div>
 
+    <p class="nav-label">Workspace</p>
     <ul class="nav-menu">
-      <li class="nav-item active" data-view="dashboard">
-        <span>📊</span> Dashboard
-      </li>
-      <li class="nav-item" data-view="templates">
-        <span>📐</span> Templates
-      </li>
-      <li class="nav-item" data-view="process">
-        <span>🏷️</span> Process Labels
-      </li>
-      <li class="nav-item" data-view="batch">
-        <span>⚡</span> Batch Processor
-      </li>
-      <li class="nav-item" data-view="history">
-        <span>📜</span> History Log
-      </li>
-      <li class="nav-item" data-view="settings">
-        <span>⚙️</span> Settings
-      </li>
-      <li class="nav-item" data-view="about">
-        <span>ℹ️</span> About
-      </li>
+      <li><button type="button" id="nav-dashboard" class="nav-item active" data-view="dashboard"><svg class="icon"><use href="#i-grid"/></svg>Dashboard</button></li>
+      <li><button type="button" id="nav-templates" class="nav-item" data-view="templates"><svg class="icon"><use href="#i-crop"/></svg>Templates</button></li>
+      <li><button type="button" id="nav-process" class="nav-item" data-view="process"><svg class="icon"><use href="#i-printer"/></svg>Process Labels</button></li>
+      <li><button type="button" id="nav-batch" class="nav-item" data-view="batch"><svg class="icon"><use href="#i-layers"/></svg>Batch Processor</button></li>
+      <li><button type="button" id="nav-history" class="nav-item" data-view="history"><svg class="icon"><use href="#i-clock"/></svg>History Log</button></li>
+      <li><button type="button" id="nav-settings" class="nav-item" data-view="settings"><svg class="icon"><use href="#i-settings"/></svg>Settings</button></li>
+      <li><button type="button" id="nav-about" class="nav-item" data-view="about"><svg class="icon"><use href="#i-info"/></svg>About</button></li>
     </ul>
+
+    <div class="sidebar-footer">100% offline &middot; v1.0.0</div>
   </aside>
 
   <!-- Main Content View Container -->
@@ -72,44 +85,53 @@
       <div class="page-header">
         <div>
           <h1 class="page-title">Dashboard</h1>
-          <p class="page-desc">Automate e-commerce shipping label cropping & grid formatting for Flipkart, Meesho, Amazon, and Shiprocket.</p>
+          <p class="page-desc">Automate e-commerce shipping label cropping &amp; grid formatting for Flipkart, Meesho, Amazon, and Shiprocket.</p>
         </div>
       </div>
 
-      <div class="card" style="background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%); border-color: #bfdbfe;">
-        <h2 class="card-title" style="color: #1e40af;">🚀 Welcome to ShipLabel Web Studio</h2>
-        <p style="font-size: 13px; color: #334155; line-height: 1.6;">
-          Process thousands of shipping labels 100% offline directly in your browser. Vector-quality crops, custom templates, smart marketplace auto-detection, and instant A4 grid sheet assembly. Zero installation required.
-        </p>
+      <div class="hero">
+        <span class="hero-eyebrow">Web Studio</span>
+        <h2>Welcome to ShipLabel Web Studio</h2>
+        <p>Process thousands of shipping labels 100% offline directly in your browser. Vector-quality crops, custom templates, smart marketplace auto-detection, and instant A4 grid sheet assembly. Zero installation required.</p>
+        <div class="hero-actions">
+          <button type="button" id="btn-hero-process" class="btn btn-light" data-goto="process"><svg class="icon"><use href="#i-printer"/></svg>Process Labels</button>
+          <button type="button" id="btn-hero-templates" class="btn btn-ghost-light" data-goto="templates"><svg class="icon"><use href="#i-crop"/></svg>Manage Templates</button>
+        </div>
       </div>
+
+      <ol class="flow" aria-label="How it works">
+        <li><div><strong>Import</strong><span>Drop one or many marketplace PDFs.</span></div></li>
+        <li><div><strong>Pick a template</strong><span>Auto-detected or chosen by you.</span></div></li>
+        <li><div><strong>Export</strong><span>Thermal, A4 grid or PNG ZIP.</span></div></li>
+      </ol>
 
       <div class="dashboard-grid">
         <div class="dash-card">
-          <div class="dash-icon">🏷️</div>
+          <div class="dash-icon"><svg class="icon"><use href="#i-printer"/></svg></div>
           <div class="dash-title">Process Labels</div>
           <div class="dash-desc">Crop single or multiple PDF shipping labels and export to Thermal 3x5 or A4 Grid sheets.</div>
-          <button class="btn btn-primary" onclick="app.switchView('process')">Open Processor</button>
+          <button type="button" id="btn-card-process" class="btn btn-primary" data-goto="process">Open Processor</button>
         </div>
 
         <div class="dash-card">
-          <div class="dash-icon">📐</div>
+          <div class="dash-icon"><svg class="icon"><use href="#i-crop"/></svg></div>
           <div class="dash-title">Template Manager</div>
           <div class="dash-desc">Learn new crop templates for Flipkart, Meesho, Amazon, or custom PDF layouts.</div>
-          <button class="btn btn-primary" onclick="app.switchView('templates')">Manage Templates</button>
+          <button type="button" id="btn-card-templates" class="btn btn-primary" data-goto="templates">Manage Templates</button>
         </div>
 
         <div class="dash-card">
-          <div class="dash-icon">⚡</div>
+          <div class="dash-icon"><svg class="icon"><use href="#i-layers"/></svg></div>
           <div class="dash-title">Batch Processor</div>
           <div class="dash-desc">High-speed client-side processing for hundreds of PDFs simultaneously.</div>
-          <button class="btn btn-primary" onclick="app.switchView('batch')">Batch Mode</button>
+          <button type="button" id="btn-card-batch" class="btn btn-primary" data-goto="batch">Batch Mode</button>
         </div>
 
         <div class="dash-card">
-          <div class="dash-icon">📜</div>
+          <div class="dash-icon"><svg class="icon"><use href="#i-clock"/></svg></div>
           <div class="dash-title">Processing History</div>
           <div class="dash-desc">View past label processing sessions and re-download recent outputs.</div>
-          <button class="btn btn-primary" onclick="app.switchView('history')">View History</button>
+          <button type="button" id="btn-card-history" class="btn btn-primary" data-goto="history">View History</button>
         </div>
       </div>
     </section>
@@ -118,14 +140,14 @@
     <section id="view-templates" class="view">
       <div class="page-header">
         <div>
-          <h1 class="page-title">Template Manager (Learn System)</h1>
+          <h1 class="page-title">Template Manager</h1>
           <p class="page-desc">Create and manage custom label crop templates for your marketplace PDFs.</p>
         </div>
         <div class="header-actions">
-          <button class="btn btn-secondary" id="btn-export-templates">📤 Export JSON</button>
-          <button class="btn btn-secondary" id="btn-import-templates">📥 Import JSON</button>
+          <button type="button" class="btn btn-secondary" id="btn-export-templates"><svg class="icon"><use href="#i-upload"/></svg>Export JSON</button>
+          <button type="button" class="btn btn-secondary" id="btn-import-templates"><svg class="icon"><use href="#i-download"/></svg>Import JSON</button>
           <input type="file" id="import-templates-file" accept=".json" style="display:none;">
-          <button class="btn btn-primary" id="btn-create-template">➕ Create New Template</button>
+          <button type="button" class="btn btn-primary" id="btn-create-template"><svg class="icon"><use href="#i-plus"/></svg>Create New Template</button>
         </div>
       </div>
 
@@ -144,22 +166,22 @@
       </div>
 
       <div class="card">
-        <h3 class="card-title">1. Import Shipping Label PDFs</h3>
+        <h3 class="card-title"><span class="step-num">1</span>Import Shipping Label PDFs</h3>
         <div class="dropzone" id="process-dropzone">
-          <div class="dropzone-icon">📄</div>
-          <div class="dropzone-title">Click to Select PDFs or Drag & Drop Files Here</div>
+          <div class="dropzone-icon"><svg class="icon"><use href="#i-files"/></svg></div>
+          <div class="dropzone-title">Click to Select PDFs or Drag &amp; Drop Files Here</div>
           <div class="dropzone-desc">Supports Single PDF, Multiple PDFs, and Batch collections</div>
           <input type="file" id="process-file-input" multiple accept=".pdf" style="display:none;">
         </div>
-        <div id="process-file-status" style="margin-top: 10px; font-size: 12px; color: var(--text-secondary);">No files selected</div>
+        <div id="process-file-status" class="status-text">No files selected</div>
         <div id="process-autodetect-badge" style="display:none; margin-top: 8px;" class="badge"></div>
       </div>
 
       <div class="card">
-        <h3 class="card-title">2. Select Crop Template</h3>
+        <h3 class="card-title"><span class="step-num">2</span>Select Crop Template</h3>
         <div class="form-row">
-          <div class="form-group" style="flex: 1;">
-            <label>Crop Template:</label>
+          <div class="form-group">
+            <label for="process-template-select">Crop Template</label>
             <select id="process-template-select">
               <!-- Populated dynamically -->
             </select>
@@ -168,10 +190,10 @@
       </div>
 
       <div class="card">
-        <h3 class="card-title">3. Output Settings</h3>
+        <h3 class="card-title"><span class="step-num">3</span>Output Settings</h3>
         <div class="form-row">
           <div class="form-group">
-            <label>Output Mode:</label>
+            <label for="process-output-mode">Output Mode</label>
             <select id="process-output-mode">
               <option value="Thermal 3x5">Thermal 3x5 Inch</option>
               <option value="Thermal 4x6">Thermal 4x6 Inch</option>
@@ -183,7 +205,7 @@
           </div>
 
           <div class="form-group">
-            <label>Paper Size:</label>
+            <label for="process-paper-size">Paper Size</label>
             <select id="process-paper-size">
               <option value="A4" selected>A4</option>
               <option value="Letter">Letter</option>
@@ -191,14 +213,14 @@
             </select>
           </div>
 
-          <div class="form-group" style="flex-direction: row; align-items: center; margin-top: 20px;">
+          <div class="form-group check-row">
             <input type="checkbox" id="process-cut-marks" checked>
-            <label for="process-cut-marks" style="margin-left: 6px; cursor: pointer;">Draw Cut Marks</label>
+            <label for="process-cut-marks">Draw Cut Marks</label>
           </div>
         </div>
       </div>
 
-      <button class="btn btn-primary" id="btn-process-submit" style="padding: 14px; font-size: 15px;">🚀 Process & Download Output</button>
+      <button type="button" class="btn btn-primary btn-cta" id="btn-process-submit"><svg class="icon"><use href="#i-download"/></svg>Process &amp; Download Output</button>
     </section>
 
     <!-- 4. BATCH VIEW -->
@@ -211,26 +233,26 @@
       </div>
 
       <div class="card">
-        <h3 class="card-title">Bulk Import</h3>
+        <h3 class="card-title"><span class="step-num">1</span>Bulk Import</h3>
         <div class="dropzone" id="batch-dropzone">
-          <div class="dropzone-icon">⚡</div>
+          <div class="dropzone-icon"><svg class="icon"><use href="#i-zap"/></svg></div>
           <div class="dropzone-title">Select or Drop Multiple PDF Files</div>
           <input type="file" id="batch-file-input" multiple accept=".pdf" style="display:none;">
         </div>
-        <div id="batch-file-status" style="margin-top: 10px; font-size: 12px; color: var(--text-secondary);">No files loaded</div>
+        <div id="batch-file-status" class="status-text">No files loaded</div>
         <div id="batch-autodetect-badge" style="display:none; margin-top: 8px;" class="badge"></div>
       </div>
 
       <div class="card">
-        <h3 class="card-title">Batch Options</h3>
+        <h3 class="card-title"><span class="step-num">2</span>Batch Options</h3>
         <div class="form-row">
-          <div class="form-group" style="flex: 1;">
-            <label>Template:</label>
+          <div class="form-group">
+            <label for="batch-template-select">Template</label>
             <select id="batch-template-select"></select>
           </div>
 
-          <div class="form-group" style="flex: 1;">
-            <label>Output Format:</label>
+          <div class="form-group">
+            <label for="batch-format-select">Output Format</label>
             <select id="batch-format-select">
               <option value="A4 Sheet (4-up Grid)" selected>A4 Sheet (4-Up Grid)</option>
               <option value="A4 Sheet (6-up Grid)">A4 Sheet (6-Up Grid)</option>
@@ -245,11 +267,11 @@
           <div class="progress-bar-container">
             <div class="progress-bar-fill" id="batch-progress-fill"></div>
           </div>
-          <div id="batch-progress-status" style="font-size: 12px; color: var(--text-secondary);">Ready</div>
+          <div id="batch-progress-status" class="status-text" style="margin-top: 0;">Ready</div>
         </div>
       </div>
 
-      <button class="btn btn-primary" id="btn-batch-start" style="padding: 14px; font-size: 15px;">⚡ Start Batch Processing</button>
+      <button type="button" class="btn btn-primary btn-cta" id="btn-batch-start"><svg class="icon"><use href="#i-zap"/></svg>Start Batch Processing</button>
     </section>
 
     <!-- 5. HISTORY VIEW -->
@@ -259,19 +281,19 @@
           <h1 class="page-title">Processing History</h1>
           <p class="page-desc">Track and review all previous label crop sessions in this browser.</p>
         </div>
-        <button class="btn btn-danger" id="btn-clear-history">🗑️ Clear History</button>
+        <button type="button" class="btn btn-danger" id="btn-clear-history"><svg class="icon"><use href="#i-trash"/></svg>Clear History</button>
       </div>
 
       <div class="card">
-        <div style="overflow-x: auto;">
-          <table class="history-table" style="width: 100%; border-collapse: collapse; font-size: 13px;">
+        <div class="table-scroll">
+          <table class="history-table">
             <thead>
-              <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-                <th style="padding: 10px;">Date & Time</th>
-                <th style="padding: 10px;">Marketplace</th>
-                <th style="padding: 10px;">Files</th>
-                <th style="padding: 10px;">Output Mode</th>
-                <th style="padding: 10px;">Status</th>
+              <tr>
+                <th>Date &amp; Time</th>
+                <th>Marketplace</th>
+                <th>Files</th>
+                <th>Output Mode</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody id="history-table-body">
@@ -293,9 +315,9 @@
 
       <div class="card">
         <h3 class="card-title">Application Defaults</h3>
-        <div class="form-row" style="gap: 20px; align-items: flex-start;">
-          <div class="form-group" style="min-width: 220px;">
-            <label>Default Paper Size:</label>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="setting-default-paper">Default Paper Size</label>
             <select id="setting-default-paper">
               <option value="A4" selected>A4</option>
               <option value="Letter">Letter</option>
@@ -303,8 +325,8 @@
             </select>
           </div>
 
-          <div class="form-group" style="min-width: 220px;">
-            <label>Default Output Mode:</label>
+          <div class="form-group">
+            <label for="setting-default-mode">Default Output Mode</label>
             <select id="setting-default-mode">
               <option value="A4 Sheet (4-up Grid)" selected>A4 Sheet (4-Up Grid)</option>
               <option value="A4 Sheet (6-up Grid)">A4 Sheet (6-Up Grid)</option>
@@ -314,20 +336,20 @@
           </div>
         </div>
 
-        <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 10px;">
-          <div class="form-group" style="flex-direction: row; align-items: center;">
+        <div class="settings-stack">
+          <div class="form-group check-row">
             <input type="checkbox" id="setting-cut-marks" checked>
-            <label for="setting-cut-marks" style="margin-left: 8px; cursor: pointer;">Enable Cut Marks by Default</label>
+            <label for="setting-cut-marks">Enable Cut Marks by Default</label>
           </div>
 
-          <div class="form-group" style="flex-direction: row; align-items: center;">
+          <div class="form-group check-row">
             <input type="checkbox" id="setting-autodetect" checked>
-            <label for="setting-autodetect" style="margin-left: 8px; cursor: pointer;">Smart Auto-Detect Marketplace on Upload</label>
+            <label for="setting-autodetect">Smart Auto-Detect Marketplace on Upload</label>
           </div>
         </div>
 
-        <div style="margin-top: 24px;">
-          <button class="btn btn-primary" id="btn-save-settings">💾 Save Settings</button>
+        <div class="card-actions">
+          <button type="button" class="btn btn-primary" id="btn-save-settings"><svg class="icon"><use href="#i-save"/></svg>Save Settings</button>
         </div>
       </div>
     </section>
@@ -343,7 +365,7 @@
 
       <div class="card">
         <h3 class="card-title">ShipLabel — E-Commerce Label Manager</h3>
-        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+        <p class="page-desc" style="margin-top: 0; max-width: none;">
           ShipLabel is a professional web application built for Flipkart, Meesho, Amazon, Shiprocket, and custom marketplace shipping label automation.<br><br>
           Features 100% offline client-side vector PDF cropping, HTML5 interactive crop template learning, smart marketplace detection, and instant A4 grid sheet assembly. Zero installation required.
         </p>
@@ -354,21 +376,21 @@
 
   <!-- Create Template Modal Dialog -->
   <div class="modal-overlay" id="template-modal">
-    <div class="modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <div class="modal-header">
-        <h3 style="font-size: 16px; font-weight: 700;">Learn New Template — Crop Box Editor</h3>
-        <button class="btn btn-secondary" id="btn-close-modal" style="padding: 4px 10px;">✕</button>
+        <h3 class="modal-title" id="modal-title">Learn New Template — Crop Box Editor</h3>
+        <button type="button" class="btn btn-secondary btn-sm" id="btn-close-modal" aria-label="Close dialog"><svg class="icon"><use href="#i-x"/></svg></button>
       </div>
 
       <div class="modal-body">
         <div class="form-row">
-          <div class="form-group" style="flex: 1;">
-            <label>Template Name:</label>
+          <div class="form-group">
+            <label for="modal-tmpl-name">Template Name</label>
             <input type="text" id="modal-tmpl-name" placeholder="e.g. Flipkart 3x5 Thermal">
           </div>
 
           <div class="form-group">
-            <label>Marketplace:</label>
+            <label for="modal-tmpl-mp">Marketplace</label>
             <select id="modal-tmpl-mp">
               <option value="Flipkart">Flipkart</option>
               <option value="Meesho">Meesho</option>
@@ -379,7 +401,7 @@
           </div>
 
           <div class="form-group">
-            <label>Label Size:</label>
+            <label for="modal-tmpl-size">Label Size</label>
             <select id="modal-tmpl-size">
               <option value="3x5">3x5 Inch</option>
               <option value="4x6">4x6 Inch</option>
@@ -388,19 +410,15 @@
           </div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-          <div style="font-size: 12px; font-weight: 600; color: var(--primary);">
-            💡 Drag mouse on sample PDF to draw crop box, or use a quick preset:
-          </div>
-          <div id="crop-dimensions-info" style="font-size: 12px; font-weight: 700; color: var(--text-secondary);">
-            Crop: 100% x 100%
-          </div>
+        <div class="modal-hint">
+          <div class="hint-text"><svg class="icon icon-sm"><use href="#i-bulb"/></svg>Drag on the sample PDF to draw a crop box, or use a quick preset:</div>
+          <div id="crop-dimensions-info" class="crop-info">Crop: 100% x 100%</div>
         </div>
 
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <button class="btn btn-secondary" id="preset-flipkart" style="padding: 4px 10px; font-size: 11px;">🎯 Preset Flipkart 3x5</button>
-          <button class="btn btn-secondary" id="preset-top-half" style="padding: 4px 10px; font-size: 11px;">📐 Top Half (Meesho/Amazon)</button>
-          <button class="btn btn-secondary" id="preset-reset" style="padding: 4px 10px; font-size: 11px;">🔄 Full Page</button>
+        <div class="preset-row">
+          <button type="button" class="btn btn-secondary btn-sm" id="preset-flipkart"><svg class="icon icon-sm"><use href="#i-target"/></svg>Preset Flipkart 3x5</button>
+          <button type="button" class="btn btn-secondary btn-sm" id="preset-top-half"><svg class="icon icon-sm"><use href="#i-half"/></svg>Top Half (Meesho/Amazon)</button>
+          <button type="button" class="btn btn-secondary btn-sm" id="preset-reset"><svg class="icon icon-sm"><use href="#i-reset"/></svg>Full Page</button>
         </div>
 
         <div class="canvas-wrapper">
@@ -409,13 +427,14 @@
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-secondary" id="btn-cancel-modal">Cancel</button>
-        <button class="btn btn-success" id="btn-save-template">💾 Save Crop Template</button>
+        <button type="button" class="btn btn-secondary" id="btn-cancel-modal">Cancel</button>
+        <button type="button" class="btn btn-success" id="btn-save-template"><svg class="icon"><use href="#i-save"/></svg>Save Crop Template</button>
       </div>
     </div>
   </div>
 
   <!-- Scripts -->
+  <script src="js/security.js"></script>
   <script src="js/template_manager.js"></script>
   <script src="js/pdf_engine.js"></script>
   <script src="js/crop_canvas.js"></script>

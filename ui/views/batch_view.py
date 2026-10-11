@@ -115,7 +115,7 @@ class BatchView(ctk.CTkFrame):
 
         self.btn_start = ctk.CTkButton(
             self.btn_bar,
-            text="⚡ Start Batch Processing",
+            text="Start Batch Processing",
             fg_color=theme.COLOR_PRIMARY,
             hover_color=theme.COLOR_PRIMARY_HOVER,
             font=(theme.FONT_FAMILY, 14, "bold"),
@@ -127,10 +127,10 @@ class BatchView(ctk.CTkFrame):
 
         self.btn_cancel = ctk.CTkButton(
             self.btn_bar,
-            text="🛑 Cancel",
-            fg_color="#FEE2E2",
+            text="Cancel",
+            fg_color=theme.COLOR_DANGER_BG,
             text_color=theme.COLOR_DANGER,
-            hover_color="#FCA5A5",
+            hover_color=theme.COLOR_DANGER_HOVER,
             font=(theme.FONT_FAMILY, 14, "bold"),
             height=44,
             width=120,

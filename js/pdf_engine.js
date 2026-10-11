@@ -34,6 +34,9 @@ class PDFEngine {
     const outDoc = await PDFDocument.create();
 
     const srcPageCount = srcDoc.getPageCount();
+    if (srcPageCount > Security.MAX_PAGES_PER_PDF) {
+      throw new Error("PDF has too many pages");
+    }
 
     for (let i = 0; i < srcPageCount; i++) {
       const srcPage = srcDoc.getPages()[i];
@@ -210,7 +213,7 @@ class PDFEngine {
 
     for (let docIdx = 0; docIdx < croppedPdfBytesList.length; docIdx++) {
       const pdfBytes = croppedPdfBytesList[docIdx];
-      const pdf = await pdfjsLib.getDocument({ data: pdfBytes }).promise;
+      const pdf = await pdfjsLib.getDocument({ data: pdfBytes, isEvalSupported: false, enableXfa: false }).promise;
       for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
         count++;
         const page = await pdf.getPage(pageNum);

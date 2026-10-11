@@ -31,7 +31,7 @@ class DragDropZone(ctk.CTkFrame):
         # Icon Label
         self.icon_label = ctk.CTkLabel(
             self.inner_frame,
-            text="📄",
+            text="",
             font=(theme.FONT_FAMILY, 36)
         )
         self.icon_label.pack(pady=(0, 5))
@@ -60,7 +60,7 @@ class DragDropZone(ctk.CTkFrame):
 
         self.btn_files = ctk.CTkButton(
             self.btn_frame,
-            text="📁 Select PDF Files",
+            text="Select PDF Files",
             fg_color=theme.COLOR_PRIMARY,
             hover_color=theme.COLOR_PRIMARY_HOVER,
             font=(theme.FONT_FAMILY, 12, "bold"),
@@ -72,10 +72,10 @@ class DragDropZone(ctk.CTkFrame):
 
         self.btn_folder = ctk.CTkButton(
             self.btn_frame,
-            text="📂 Select Folder / ZIP",
+            text="Select Folder / ZIP",
             fg_color=theme.COLOR_BG_HOVER,
             text_color=theme.COLOR_TEXT_PRIMARY,
-            hover_color="#E2E8F0",
+            hover_color=theme.COLOR_BG_HOVER,
             border_color=theme.COLOR_BORDER,
             border_width=1,
             font=(theme.FONT_FAMILY, 12),

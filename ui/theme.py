@@ -1,34 +1,48 @@
 """
-ShipLabel UI Theme - Clean Light Commercial Theme System
-Designed for modern Windows 11 desktop feel (Clean white/slate, crisp borders, professional blue accents).
+ShipLabel UI Theme - Navy & Blue palette (matches styles.css design tokens).
+Dark navy sidebar, white cards on a pale-blue canvas, vivid blue accents.
 """
 
-COLOR_BG_MAIN = "#F8FAFC"        # Slate 50
-COLOR_BG_CARD = "#FFFFFF"        # Pure White
-COLOR_BG_SIDEBAR = "#FFFFFF"     # White Sidebar
-COLOR_BG_HOVER = "#F1F5F9"       # Slate 100
+# Brand palette
+NAVY_BLUE = "#1B1B39"
+PRIMARY_BLUE = "#3965FA"
+SOFT_BLUE = "#99B7FC"
+PALE_BLUE = "#E9EBFF"
+BASE_WHITE = "#FFFFFF"
+LIGHT_GRAY = "#EDEDED"
+DARK_GRAY = "#202020"
 
-COLOR_BORDER = "#E2E8F0"         # Slate 200
-COLOR_BORDER_FOCUS = "#3B82F6"   # Blue 500
+COLOR_BG_MAIN = "#F5F6FF"        # Pale blue canvas
+COLOR_BG_CARD = BASE_WHITE
+COLOR_BG_SIDEBAR = NAVY_BLUE
+COLOR_BG_HOVER = PALE_BLUE
+COLOR_SIDEBAR_HOVER = "#2A2A52"  # Navy lifted for hover
+COLOR_SIDEBAR_TEXT = "#C9D3F5"   # Soft blue-white text on navy
 
-COLOR_TEXT_PRIMARY = "#0F172A"   # Slate 900
-COLOR_TEXT_SECONDARY = "#475569" # Slate 600
-COLOR_TEXT_MUTED = "#94A3B8"     # Slate 400
+COLOR_BORDER = "#DDE0F2"
+COLOR_BORDER_FOCUS = PRIMARY_BLUE
 
-COLOR_PRIMARY = "#2563EB"        # Blue 600
-COLOR_PRIMARY_HOVER = "#1D4ED8"  # Blue 700
-COLOR_PRIMARY_TEXT = "#FFFFFF"
+COLOR_TEXT_PRIMARY = NAVY_BLUE
+COLOR_TEXT_SECONDARY = "#4A4D6B"
+COLOR_TEXT_MUTED = "#6B6F8F"
 
-COLOR_SUCCESS = "#059669"        # Emerald 600
-COLOR_SUCCESS_BG = "#ECFDF5"     # Emerald 50
+COLOR_PRIMARY = PRIMARY_BLUE
+COLOR_PRIMARY_HOVER = "#2A4FD6"
+COLOR_PRIMARY_TEXT = BASE_WHITE
 
-COLOR_WARNING = "#D97706"        # Amber 600
-COLOR_DANGER = "#DC2626"         # Red 600
+COLOR_SUCCESS = "#059669"
+COLOR_SUCCESS_BG = "#ECFDF5"
+
+COLOR_WARNING = "#D97706"
+COLOR_DANGER = "#DC2626"
+COLOR_DANGER_BG = "#FEE2E2"
+COLOR_DANGER_HOVER = "#FCA5A5"
 
 # Canvas & Crop Box Theme
-COLOR_CROP_BOX = "#2563EB"       # Bright blue boundary
-COLOR_CROP_FILL = "#2563EB"      # Translucent blue fill
-COLOR_HANDLE = "#1D4ED8"         # Darker blue corner handles
+COLOR_CROP_BOX = PRIMARY_BLUE
+COLOR_CROP_FILL = PRIMARY_BLUE
+COLOR_HANDLE = NAVY_BLUE
+COLOR_CANVAS_BG = LIGHT_GRAY
 
 FONT_FAMILY = "Segoe UI"
 FONT_SIZE_TITLE = 20

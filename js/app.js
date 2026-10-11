@@ -2,6 +2,12 @@
  * App: Controller for ShipLabel Web Studio.
  */
 
+// pdf.js hardening: no eval of font programs (CVE-2024-4367), same-origin worker only
+if (window.pdfjsLib) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "vendor/pdf.worker.min.js";
+}
+const PDFJS_SAFE_OPTS = { isEvalSupported: false, enableXfa: false };
+
 class App {
   constructor() {
     this.currentView = "dashboard";
@@ -40,9 +46,15 @@ class App {
   // Settings Storage
   loadSettings() {
     try {
-      const stored = localStorage.getItem("shiplabel_settings");
+      const stored = Security.storageGet("shiplabel_settings");
       if (stored) {
-        this.settings = Object.assign(this.settings, JSON.parse(stored));
+        const p = JSON.parse(stored) || {};
+        this.settings = {
+          defaultPaper: Security.pick(p.defaultPaper, Security.PAPER_SIZES, this.settings.defaultPaper),
+          defaultMode: Security.pick(p.defaultMode, Security.OUTPUT_MODES, this.settings.defaultMode),
+          cutMarks: typeof p.cutMarks === "boolean" ? p.cutMarks : this.settings.cutMarks,
+          autoDetect: typeof p.autoDetect === "boolean" ? p.autoDetect : this.settings.autoDetect
+        };
       }
     } catch (e) {
       console.error("Settings load error:", e);
@@ -74,16 +86,21 @@ class App {
     this.settings.cutMarks = document.getElementById("setting-cut-marks").checked;
     this.settings.autoDetect = document.getElementById("setting-autodetect").checked;
 
-    localStorage.setItem("shiplabel_settings", JSON.stringify(this.settings));
-    alert("Settings saved successfully!");
+    this.settings.defaultPaper = Security.pick(this.settings.defaultPaper, Security.PAPER_SIZES, "A4");
+    this.settings.defaultMode = Security.pick(this.settings.defaultMode, Security.OUTPUT_MODES, "A4 Sheet (4-up Grid)");
+    const ok = Security.storageSet("shiplabel_settings", JSON.stringify(this.settings));
+    alert(ok ? "Settings saved successfully!" : "Could not save settings (browser storage unavailable).");
   }
 
   // History Storage
   loadHistory() {
     try {
-      const stored = localStorage.getItem("shiplabel_history");
+      const stored = Security.storageGet("shiplabel_history");
       if (stored) {
-        this.history = JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        this.history = Array.isArray(parsed)
+          ? parsed.slice(0, 50).map(Security.sanitizeHistoryEntry).filter(Boolean)
+          : [];
       }
     } catch (e) {
       console.error("History load error:", e);
@@ -92,18 +109,19 @@ class App {
   }
 
   addHistoryEntry(entry) {
+    entry = Security.sanitizeHistoryEntry(entry) || {};
     entry.id = "hist_" + Date.now();
     entry.timestamp = new Date().toLocaleString();
     this.history.unshift(entry);
     if (this.history.length > 50) this.history.pop(); // keep last 50
-    localStorage.setItem("shiplabel_history", JSON.stringify(this.history));
+    Security.storageSet("shiplabel_history", JSON.stringify(this.history));
     this.renderHistory();
   }
 
   clearHistory() {
     if (confirm("Clear all processing history?")) {
       this.history = [];
-      localStorage.removeItem("shiplabel_history");
+      Security.storageRemove("shiplabel_history");
       this.renderHistory();
     }
   }
@@ -112,20 +130,38 @@ class App {
     const tbody = document.getElementById("history-table-body");
     if (!tbody) return;
 
+    tbody.textContent = "";
     if (this.history.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">No processing history yet.</td></tr>`;
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 5;
+      td.style.cssText = "text-align: center; color: var(--text-muted); padding: 30px;";
+      td.textContent = "No processing history yet.";
+      tr.appendChild(td);
+      tbody.appendChild(tr);
       return;
     }
 
-    tbody.innerHTML = this.history.map(item => `
-      <tr>
-        <td style="padding: 10px;">${item.timestamp}</td>
-        <td style="padding: 10px;"><span class="badge">${item.marketplace || 'Custom'}</span></td>
-        <td style="padding: 10px; font-weight: 600;">${item.filesCount} file(s)</td>
-        <td style="padding: 10px;">${item.mode}</td>
-        <td style="padding: 10px; color: var(--success); font-weight: 600;">✓ Completed</td>
-      </tr>
-    `).join("");
+    this.history.forEach(item => {
+      const tr = document.createElement("tr");
+      const cell = (text, extra) => {
+        const td = document.createElement("td");
+        td.style.cssText = "padding: 10px;" + (extra || "");
+        td.textContent = text;
+        tr.appendChild(td);
+        return td;
+      };
+      cell(item.timestamp);
+      const mpTd = cell("");
+      const badge = document.createElement("span");
+      badge.className = "badge";
+      badge.textContent = item.marketplace || "Custom";
+      mpTd.appendChild(badge);
+      cell(`${item.filesCount} file(s)`, " font-weight: 600;");
+      cell(item.mode);
+      cell("Completed", " color: var(--success); font-weight: 600;");
+      tbody.appendChild(tr);
+    });
   }
 
   // Navigation
@@ -149,6 +185,10 @@ class App {
     if (mobileMenuBtn) mobileMenuBtn.addEventListener("click", () => toggleSidebar(true));
     if (sidebarCloseBtn) sidebarCloseBtn.addEventListener("click", () => toggleSidebar(false));
     if (overlay) overlay.addEventListener("click", () => toggleSidebar(false));
+
+    document.querySelectorAll("[data-goto]").forEach(btn => {
+      btn.addEventListener("click", () => this.switchView(btn.getAttribute("data-goto")));
+    });
 
     document.querySelectorAll(".nav-item").forEach(item => {
       item.addEventListener("click", () => {
@@ -192,7 +232,7 @@ class App {
 
     try {
       const buffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+      const pdf = await pdfjsLib.getDocument({ data: buffer, ...PDFJS_SAFE_OPTS }).promise;
       const page = await pdf.getPage(1);
       const textContent = await page.getTextContent();
       const text = textContent.items.map(i => i.str).join(" ").toLowerCase();
@@ -221,7 +261,7 @@ class App {
         const badge = document.getElementById(badgeId);
         if (badge) {
           badge.style.display = "inline-block";
-          badge.textContent = `✨ Auto-Detected: ${detectedMp} Crop Template`;
+          badge.textContent = `Auto-detected: ${detectedMp} Crop Template`;
         }
       }
     } catch (e) {
@@ -232,6 +272,14 @@ class App {
   // Drag & Drop Helper
   setupDropzone(dropzoneEl, fileInputEl, onFilesSelected) {
     dropzoneEl.addEventListener("click", () => fileInputEl.click());
+    dropzoneEl.setAttribute("role", "button");
+    dropzoneEl.setAttribute("tabindex", "0");
+    dropzoneEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        fileInputEl.click();
+      }
+    });
 
     dropzoneEl.addEventListener("dragover", (e) => {
       e.preventDefault();
@@ -250,18 +298,55 @@ class App {
       e.stopPropagation();
       dropzoneEl.classList.remove("dragover");
 
-      const files = Array.from(e.dataTransfer.files).filter(f => f.name.toLowerCase().endsWith(".pdf"));
-      if (files.length > 0) {
-        onFilesSelected(files);
-      }
+      this.acceptFiles(Array.from(e.dataTransfer.files), onFilesSelected, dropzoneEl);
     });
 
     fileInputEl.addEventListener("change", (e) => {
       const files = Array.from(e.target.files);
-      if (files.length > 0) {
-        onFilesSelected(files);
-      }
+      e.target.value = ""; // allow re-selecting the same file
+      this.acceptFiles(files, onFilesSelected, dropzoneEl);
     });
+  }
+
+  // Validate (type, magic bytes, size, count) before any parsing, and tell the user why files were skipped
+  async acceptFiles(files, onFilesSelected, dropzoneEl) {
+    if (files.length === 0) return;
+    const { valid, errors } = await Security.validatePdfFiles(files);
+    this.showUploadNotice(dropzoneEl, valid.length, files.length, errors);
+    if (valid.length > 0) onFilesSelected(valid);
+  }
+
+  showUploadNotice(dropzoneEl, accepted, total, errors) {
+    if (!dropzoneEl) return;
+    let box = dropzoneEl.parentElement.querySelector(".upload-notice");
+    if (errors.length === 0) {
+      if (box) box.remove();
+      return;
+    }
+    if (!box) {
+      box = document.createElement("div");
+      box.className = "upload-notice";
+      box.setAttribute("role", "alert");
+      dropzoneEl.insertAdjacentElement("afterend", box);
+    }
+    box.textContent = "";
+    const head = document.createElement("strong");
+    head.textContent = accepted > 0
+      ? `${accepted} of ${total} file(s) accepted. Some were skipped:`
+      : "No files were accepted:";
+    box.appendChild(head);
+    const list = document.createElement("ul");
+    errors.slice(0, 8).forEach(msg => {
+      const li = document.createElement("li");
+      li.textContent = msg;
+      list.appendChild(li);
+    });
+    if (errors.length > 8) {
+      const li = document.createElement("li");
+      li.textContent = `...and ${errors.length - 8} more.`;
+      list.appendChild(li);
+    }
+    box.appendChild(list);
   }
 
   // Templates
@@ -287,8 +372,13 @@ class App {
 
     sampleInput.addEventListener("change", async (e) => {
       if (e.target.files.length === 0) return;
-      const file = e.target.files[0];
-      const buffer = await file.arrayBuffer();
+      const { valid, errors } = await Security.validatePdfFiles([e.target.files[0]]);
+      e.target.value = "";
+      if (valid.length === 0) {
+        alert("Invalid file: " + errors.join("\n"));
+        return;
+      }
+      const buffer = await valid[0].arrayBuffer();
       this.samplePdfBuffer = buffer;
 
       await this.loadSamplePdfToCanvas(buffer);
@@ -301,8 +391,8 @@ class App {
 
     btnSave.addEventListener("click", () => {
       const name = document.getElementById("modal-tmpl-name").value.trim();
-      const mp = document.getElementById("modal-tmpl-mp").value;
-      const size = document.getElementById("modal-tmpl-size").value;
+      const mp = Security.pick(document.getElementById("modal-tmpl-mp").value, Security.MARKETPLACES, "Custom");
+      const size = Security.pick(document.getElementById("modal-tmpl-size").value, Security.LABEL_SIZES, "3x5");
 
       if (!name) {
         alert("Please enter a Template Name.");
@@ -310,10 +400,14 @@ class App {
       }
 
       const cropRect = this.cropCanvas.getCropRect();
-      window.templateManager.addTemplate(name, mp, cropRect, size);
+      const saved = window.templateManager.addTemplate(name, mp, cropRect, size);
+      if (!saved) {
+        alert("Could not save template: invalid crop area or template limit reached.");
+        return;
+      }
       closeModal();
       this.renderTemplates();
-      alert(`Template '${name}' saved successfully!`);
+      alert(`Template '${saved.name}' saved successfully!`);
     });
 
     // Modal Crop Presets
@@ -348,18 +442,20 @@ class App {
       if (e.target.files.length === 0) return;
       try {
         const file = e.target.files[0];
-        const text = await file.text();
-        const imported = JSON.parse(text);
-
-        if (Array.isArray(imported)) {
-          imported.forEach(t => {
-            if (t.name && t.cropRect) {
-              window.templateManager.addTemplate(t.name, t.marketplace || "Custom", t.cropRect, t.labelSize || "3x5");
-            }
-          });
-          this.renderTemplates();
-          alert(`Successfully imported ${imported.length} templates!`);
+        e.target.value = "";
+        if (file.size > Security.MAX_IMPORT_BYTES) {
+          alert("Import file too large (max 1 MB).");
+          return;
         }
+        const imported = JSON.parse(await file.text());
+        if (!Array.isArray(imported)) throw new Error("not an array");
+
+        let added = 0;
+        imported.slice(0, Security.MAX_TEMPLATES).forEach(t => {
+          if (t && window.templateManager.addTemplate(t.name, t.marketplace, t.cropRect, t.labelSize)) added++;
+        });
+        this.renderTemplates();
+        alert(`Imported ${added} of ${imported.length} templates (invalid entries were skipped).`);
       } catch (err) {
         alert("Failed to import templates: Invalid JSON format.");
       }
@@ -382,7 +478,7 @@ class App {
     }
 
     try {
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer, ...PDFJS_SAFE_OPTS }).promise;
       const page = await pdf.getPage(1);
       const viewport = page.getViewport({ scale: 1.5 });
 
@@ -412,11 +508,14 @@ class App {
 
   renderTemplates() {
     const container = document.getElementById("template-list-container");
-    container.innerHTML = "";
+    container.textContent = "";
     const templates = window.templateManager.getAll();
 
     if (templates.length === 0) {
-      container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">No templates created yet. Click '+ Create New Template' to learn a crop area.</div>`;
+      const empty = document.createElement("div");
+      empty.className = "empty-state";
+      empty.textContent = "No templates created yet. Click 'Create New Template' to learn a crop area.";
+      container.appendChild(empty);
       return;
     }
 
@@ -427,20 +526,32 @@ class App {
       const rect = t.cropRect;
       const cropStr = `X: ${(rect.x0*100).toFixed(0)}%..${(rect.x1*100).toFixed(0)}%, Y: ${(rect.y0*100).toFixed(0)}%..${(rect.y1*100).toFixed(0)}%`;
 
-      card.innerHTML = `
-        <div>
-          <div class="tmpl-header">
-            <span class="tmpl-name">📐 ${t.name}</span>
-            <span class="badge">${t.marketplace}</span>
-          </div>
-          <div class="tmpl-details" style="margin-top: 8px;">
-            Size: ${t.labelSize} • Crop: ${cropStr}
-          </div>
-        </div>
-        <div style="display: flex; justify-content: flex-end; gap: 6px;">
-          <button class="btn btn-danger" style="padding: 4px 10px; font-size: 11px;" onclick="app.deleteTemplate('${t.id}')">🗑️ Delete</button>
-        </div>
-      `;
+      const top = document.createElement("div");
+      const header = document.createElement("div");
+      header.className = "tmpl-header";
+      const nameEl = document.createElement("span");
+      nameEl.className = "tmpl-name";
+      nameEl.innerHTML = '<svg class="icon"><use href="#i-crop"/></svg>';
+      nameEl.appendChild(document.createTextNode(t.name));
+      const badge = document.createElement("span");
+      badge.className = "badge";
+      badge.textContent = t.marketplace;
+      header.append(nameEl, badge);
+      const details = document.createElement("div");
+      details.className = "tmpl-details";
+      details.textContent = `Size: ${t.labelSize} • Crop: ${cropStr}`;
+      top.append(header, details);
+
+      const actions = document.createElement("div");
+      actions.className = "tmpl-actions";
+      const del = document.createElement("button");
+      del.className = "btn btn-danger btn-sm";
+      del.innerHTML = '<svg class="icon icon-sm"><use href="#i-trash"/></svg>';
+      del.appendChild(document.createTextNode("Delete"));
+      del.addEventListener("click", () => this.deleteTemplate(t.id));
+      actions.appendChild(del);
+
+      card.append(top, actions);
       container.appendChild(card);
     });
   }
@@ -495,6 +606,7 @@ class App {
       const paperSize = document.getElementById("process-paper-size").value;
       const cutMarks = document.getElementById("process-cut-marks").checked;
 
+      const submitLabel = btnSubmit.innerHTML;
       btnSubmit.disabled = true;
       btnSubmit.textContent = "Processing PDF...";
 
@@ -508,7 +620,7 @@ class App {
 
         let resultBytes, fileExt, mimeType;
         if (mode === "PNG ZIP") {
-          resultBytes = await PDFEngine.exportPNGZip(croppedBuffers, tmpl.marketplace);
+          resultBytes = await PDFEngine.exportPNGZip(croppedBuffers, Security.safeFilePart(tmpl.marketplace));
           fileExt = "zip";
           mimeType = "application/zip";
         } else if (mode.startsWith("Thermal")) {
@@ -532,7 +644,7 @@ class App {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `ShipLabel_${tmpl.marketplace}_${this.processFiles.length}_Labels.${fileExt}`;
+        a.download = `ShipLabel_${Security.safeFilePart(tmpl.marketplace)}_${this.processFiles.length}_Labels.${fileExt}`;
         a.click();
         URL.revokeObjectURL(url);
 
@@ -543,13 +655,13 @@ class App {
           mode: mode
         });
 
-        alert("🎉 Label processing complete! Download started automatically.");
+        alert("Label processing complete! Download started automatically.");
       } catch (err) {
         console.error("Error processing PDFs:", err);
-        alert("An error occurred during PDF processing:\n" + err.message);
+        alert("An error occurred during PDF processing. The file may be corrupted, encrypted or too complex.");
       } finally {
         btnSubmit.disabled = false;
-        btnSubmit.textContent = "🚀 Process & Download Output";
+        btnSubmit.innerHTML = submitLabel;
       }
     });
   }
@@ -603,7 +715,7 @@ class App {
         progressStatus.textContent = "Formatting output...";
         let resultBytes, fileExt, mimeType;
         if (format === "PNG ZIP") {
-          resultBytes = await PDFEngine.exportPNGZip(croppedBuffers, tmpl.marketplace);
+          resultBytes = await PDFEngine.exportPNGZip(croppedBuffers, Security.safeFilePart(tmpl.marketplace));
           fileExt = "zip";
           mimeType = "application/zip";
         } else if (format.startsWith("Thermal")) {
@@ -626,11 +738,11 @@ class App {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `ShipLabel_Batch_${tmpl.marketplace}_${total}_Labels.${fileExt}`;
+        a.download = `ShipLabel_Batch_${Security.safeFilePart(tmpl.marketplace)}_${total}_Labels.${fileExt}`;
         a.click();
         URL.revokeObjectURL(url);
 
-        progressStatus.textContent = `🎉 Batch processing complete! ${total} files exported.`;
+        progressStatus.textContent = `Batch processing complete! ${total} files exported.`;
 
         // Record history
         this.addHistoryEntry({
@@ -642,7 +754,7 @@ class App {
         alert(`Successfully processed ${total} labels! Download initiated.`);
       } catch (err) {
         console.error("Batch processing error:", err);
-        alert("Batch error: " + err.message);
+        alert("Batch processing failed. A file may be corrupted, encrypted or too complex.");
       } finally {
         btnStart.disabled = false;
       }

@@ -1,4 +1,4 @@
-# 🏷️ ShipLabel Studio — E-Commerce Shipping Label Manager
+# ShipLabel Studio — E-Commerce Shipping Label Manager
 
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -11,7 +11,7 @@ ShipLabel Studio features **dual runtime support**: run it as a lightweight **De
 
 ---
 
-## 🌟 Why ShipLabel Studio?
+## Why ShipLabel Studio?
 
 Managing shipping labels from multiple e-commerce platforms often involves tedious manual cropping, awkward PDF layouts, and wasted paper. Existing online converters often require uploading customer address data to third-party servers, posing privacy and data security risks.
 
@@ -23,12 +23,12 @@ Managing shipping labels from multiple e-commerce platforms often involves tedio
 
 ---
 
-## ✨ Features at a Glance
+## Features at a Glance
 
 | Feature | Description |
 | :--- | :--- |
 | **Vector PDF Cropping** | Pure vector manipulation with PyMuPDF / pdf-lib — zero quality loss or pixelation. |
-| **Dual Interface** | Modern native Desktop App (CustomTkinter) + zero-install Web Studio (HTML5/JS). |
+| **Dual Interface** | Modern native Desktop App (CustomTkinter) + zero-install Web Studio (HTML5/JS), sharing one navy & blue design system. |
 | **Marketplace Presets** | Built-in templates for Flipkart (3x5), Meesho (Top-half), Amazon (A6/Top-half), and Shiprocket. |
 | **Interactive Crop Template Editor** | Draw custom crop boxes visually over sample PDFs to learn custom label formats. |
 | **Smart Auto-Detection** | Automatically matches uploaded PDFs to the correct marketplace template based on dimensions and text hints. |
@@ -39,7 +39,7 @@ Managing shipping labels from multiple e-commerce platforms often involves tedio
 
 ---
 
-## 🛠️ Architecture & Technology Stack
+## Architecture & Technology Stack
 
 ```
 ShipLabel Studio
@@ -59,23 +59,23 @@ ShipLabel Studio
 
 ---
 
-## 💡 How It Helps People (Use Cases)
+## How It Helps People (Use Cases)
 
-### 🎯 1. E-Commerce Sellers & Warehouse Operators
+### 1. E-Commerce Sellers & Warehouse Operators
 Sellers handling dozens or hundreds of daily orders on Flipkart, Meesho, and Amazon spend hours opening individual PDFs and cropping labels. **ShipLabel Studio automates this into a 1-click batch workflow.**
 
-### 🎯 2. Budget-Conscious Small Businesses
+### 2. Budget-Conscious Small Businesses
 Small sellers who haven't invested in expensive thermal roll printers can arrange **4-Up or 6-Up grid sheets on A4 adhesive paper**, reducing label paper costs by up to 75%.
 
-### 🎯 3. Logistics & Courier Scan Reliability
+### 3. Logistics & Courier Scan Reliability
 Scanners at courier hubs frequently reject labels cropped via screenshot tools or raster image converters due to blurry barcodes. ShipLabel retains native PDF vector paths, ensuring **100% barcode scan rates**.
 
-### 🎯 4. Strict Privacy & Data Compliance
+### 4. Strict Privacy & Data Compliance
 Customer addresses and phone numbers are sensitive PII (Personally Identifiable Information). ShipLabel operates **completely offline**—giving privacy-minded businesses complete peace of mind.
 
 ---
 
-## 🚀 Quick Start Guide
+## Quick Start Guide
 
 ### Option A: Web Studio (Browser — Zero Installation)
 
@@ -108,7 +108,7 @@ Customer addresses and phone numbers are sensitive PII (Personally Identifiable 
 
 ---
 
-## 📖 How to Use
+## How to Use
 
 ### 1. Processing Shipping Labels
 1. Go to the **Process Labels** tab.
@@ -135,7 +135,32 @@ Customer addresses and phone numbers are sensitive PII (Personally Identifiable 
 
 ---
 
-## 📁 Directory Structure
+## Design System
+
+Both interfaces (the Web Studio in `styles.css` and the Desktop GUI in `ui/theme.py`) share the same navy & blue palette.
+
+| Token | Hex | Used for |
+| :--- | :--- | :--- |
+| Navy Blue | `#1B1B39` | Sidebar, hero banner, primary text |
+| Primary Blue | `#3965FA` | Buttons, active nav item, focus rings, crop box |
+| Soft Blue | `#99B7FC` | Dashed drop-zone border, hover borders, sidebar labels |
+| Pale Blue | `#E9EBFF` | Hover fills, badges, icon tiles |
+| Base White | `#FFFFFF` | Cards, inputs |
+| Light Gray | `#EDEDED` | Canvas backdrop, progress track |
+| Dark Gray | `#202020` | Reserved for high-contrast text and dark surfaces |
+
+**UI rules**
+
+1. No neon or glow effects, neon gradients, or dark glassmorphism. Shadows stay soft and neutral.
+2. Text keeps WCAG AA contrast on white and pale-blue backgrounds.
+3. Layouts are responsive: dashboard widgets reflow from 1 column on mobile to multiple columns on desktop. On phones the sidebar becomes an off-canvas drawer, and primary actions stay above the system navigation bar.
+4. Every interactive button and input has a descriptive `id` for automated testing.
+5. Icons are a single consistent stroke-icon set (inline SVG sprite in `index.html`), not emoji.
+6. Motion is subtle (fade/rise on views, hover lift on cards) and disabled under `prefers-reduced-motion`.
+
+---
+
+## Directory Structure
 
 ```
 LABELPDF/
@@ -164,6 +189,6 @@ LABELPDF/
 
 ---
 
-## 🛡️ License
+## License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.

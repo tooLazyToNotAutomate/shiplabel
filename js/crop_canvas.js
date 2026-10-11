@@ -148,17 +148,17 @@ class CropCanvas {
     const h = y1 - y0;
 
     // Draw translucent highlight overlay
-    this.ctx.fillStyle = 'rgba(37, 99, 235, 0.15)';
+    this.ctx.fillStyle = 'rgba(57, 101, 250, 0.18)';
     this.ctx.fillRect(x0, y0, w, h);
 
     // Draw border line
-    this.ctx.strokeStyle = '#2563eb';
+    this.ctx.strokeStyle = '#3965fa';
     this.ctx.lineWidth = 2;
     this.ctx.strokeRect(x0, y0, w, h);
 
     // Draw handles
     const handles = this.getHandleCoords();
-    this.ctx.fillStyle = '#1d4ed8';
+    this.ctx.fillStyle = '#1b1b39';
     this.ctx.strokeStyle = '#ffffff';
     this.ctx.lineWidth = 1;
 

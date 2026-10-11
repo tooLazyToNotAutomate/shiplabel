@@ -14,7 +14,7 @@ class CropCanvas(tk.Frame):
     def __init__(self, master, **kwargs):
         super().__init__(master, bg=theme.COLOR_BG_CARD, **kwargs)
 
-        self.canvas = tk.Canvas(self, bg="#E2E8F0", highlightthickness=0)
+        self.canvas = tk.Canvas(self, bg=theme.COLOR_CANVAS_BG, highlightthickness=0)
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
         self.pil_image: Optional[Image.Image] = None
