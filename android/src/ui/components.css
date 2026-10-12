@@ -65,3 +65,16 @@ label.field > select, label.field > input[type=text] {
   min-height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: var(--soft-blue); color: var(--navy);
   font-weight: 700; font-size: 14px;
 }
+
+.layouts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.layout-card { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 12px 8px; text-align: center; font: inherit; color: var(--text); background: #fff; border: 2px solid var(--border); border-radius: var(--radius); }
+.layout-card[aria-checked="true"] { border-color: var(--blue); background: #f4f6ff; box-shadow: 0 0 0 3px var(--pale-blue); }
+.layout-card svg { width: 44px; height: 54px; margin-bottom: 4px; }
+.layout-card b { font-size: 13px; }
+.layout-card span { font-size: 11.5px; color: var(--text-muted); }
+.seg { display: flex; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: #fff; }
+.seg button { flex: 1; min-height: 44px; border: 0; background: none; font: inherit; font-weight: 600; color: var(--text-2); }
+.seg button + button { border-left: 1px solid var(--border); }
+.seg button[aria-checked="true"] { background: var(--blue); color: #fff; }
+.field-title { font-size: 13px; color: var(--text-2); font-weight: 600; margin-bottom: 6px; display: block; }
+.file-item .rm { background: none; border: 0; color: var(--text-muted); font-size: 20px; line-height: 1; padding: 0 6px; }

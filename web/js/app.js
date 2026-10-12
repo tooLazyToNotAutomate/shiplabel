@@ -12,7 +12,6 @@ class App {
   constructor() {
     this.currentView = "dashboard";
     this.processFiles = [];
-    this.batchFiles = [];
 
     this.settings = {
       defaultPaper: "A4",
@@ -32,7 +31,6 @@ class App {
 
     this.bindNavigation();
     this.bindProcess();
-    this.bindBatch();
     this.bindHistory();
     this.bindSettings();
 
@@ -59,7 +57,7 @@ class App {
     this.applySettingsToControls();
   }
 
-  // Push the saved defaults into the Settings form, the Process form and the Batch form
+  // Push the saved defaults into the Settings form, the Print Labels form
   applySettingsToControls() {
     const set = (id, prop, value) => {
       const el = document.getElementById(id);
@@ -70,11 +68,18 @@ class App {
     set("setting-cut-marks", "checked", this.settings.cutMarks);
     set("setting-autodetect", "checked", this.settings.autoDetect);
 
-    set("process-paper-size", "value", this.settings.defaultPaper);
-    set("process-output-mode", "value", this.settings.defaultMode);
     set("process-cut-marks", "checked", this.settings.cutMarks);
+    this.setRadio("process-paper", this.settings.defaultPaper);
+    this.setRadio("process-layout", this.settings.defaultMode);
+  }
 
-    set("batch-format-select", "value", this.settings.defaultMode);
+  setRadio(name, value) {
+    document.querySelectorAll(`input[name="${name}"]`).forEach(r => { r.checked = r.value === value; });
+  }
+
+  getRadio(name, fallback) {
+    const r = document.querySelector(`input[name="${name}"]:checked`);
+    return r ? r.value : fallback;
   }
 
   saveSettings(silent = false) {
@@ -94,7 +99,7 @@ class App {
   showSettingsSaved() {
     const note = document.getElementById("settings-saved-note");
     if (!note) return;
-    note.textContent = "Saved. New defaults are applied to Process and Batch.";
+    note.textContent = "Saved. New defaults are applied to Print Labels.";
     clearTimeout(this._savedTimer);
     this._savedTimer = setTimeout(() => (note.textContent = ""), 3000);
   }
@@ -197,6 +202,12 @@ class App {
       btn.addEventListener("click", () => this.switchView(btn.getAttribute("data-goto")));
     });
 
+    document.querySelectorAll("[data-scroll]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.getElementById(btn.getAttribute("data-scroll"))?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
     document.querySelectorAll(".nav-item").forEach(item => {
       item.addEventListener("click", () => {
         const view = item.getAttribute("data-view");
@@ -224,8 +235,6 @@ class App {
 
     if (viewName === "process") {
       this.populateTemplateDropdown("process-template-select");
-    } else if (viewName === "batch") {
-      this.populateTemplateDropdown("batch-template-select");
     } else if (viewName === "history") {
       this.renderHistory();
     }
@@ -367,47 +376,57 @@ class App {
     });
   }
 
-  // Process View
+  // Print Labels view (handles one file or hundreds)
   bindProcess() {
     const dropzone = document.getElementById("process-dropzone");
     const fileInput = document.getElementById("process-file-input");
-    const statusLabel = document.getElementById("process-file-status");
     const btnSubmit = document.getElementById("btn-process-submit");
 
     this.setupDropzone(dropzone, fileInput, (files) => {
-      this.processFiles = files;
-      statusLabel.textContent = `Selected ${files.length} file(s): ` + files.map(f => f.name).join(", ");
-      this.autoDetectMarketplace(files[0], "process-template-select", "process-autodetect-badge");
+      const key = f => `${f.name}|${f.size}|${f.lastModified}`;
+      const have = new Set(this.processFiles.map(key));
+      files.forEach(f => { if (!have.has(key(f))) { this.processFiles.push(f); have.add(key(f)); } });
+      this.processFiles = this.processFiles.slice(0, Security.MAX_FILES);
+      this.renderProcessFiles();
+      if (this.processFiles.length === files.length) {
+        this.autoDetectMarketplace(files[0], "process-template-select", "process-autodetect-badge");
+      }
     });
+
+    document.querySelectorAll('input[name="process-layout"], input[name="process-paper"]').forEach(r => {
+      r.addEventListener("change", () => this.updateProcessSummary());
+    });
+    this.renderProcessFiles();
 
     btnSubmit.addEventListener("click", async () => {
       if (this.processFiles.length === 0) {
-        alert("Please select at least one PDF file.");
+        alert("Please add at least one PDF file.");
         return;
       }
 
       const tmplId = document.getElementById("process-template-select").value;
       const tmpl = window.templateManager.getById(tmplId);
       if (!tmpl) {
-        alert("Please select a valid crop template.");
+        alert("Please select a valid label type.");
         return;
       }
 
-      const mode = document.getElementById("process-output-mode").value;
-      const paperSize = document.getElementById("process-paper-size").value;
+      const mode = Security.pick(this.getRadio("process-layout", this.settings.defaultMode), Security.OUTPUT_MODES, "A4 Sheet (4-up Grid)");
+      const paperSize = Security.pick(this.getRadio("process-paper", "A4"), Security.PAPER_SIZES, "A4");
       const cutMarks = document.getElementById("process-cut-marks").checked;
+      const total = this.processFiles.length;
 
       const submitLabel = btnSubmit.innerHTML;
       btnSubmit.disabled = true;
-      btnSubmit.textContent = "Processing PDF...";
 
       try {
         const croppedBuffers = [];
-        for (const file of this.processFiles) {
-          const buf = await file.arrayBuffer();
-          const croppedBytes = await PDFEngine.cropPDF(buf, tmpl.cropRect);
-          croppedBuffers.push(croppedBytes);
+        for (let i = 0; i < total; i++) {
+          btnSubmit.textContent = total > 1 ? `Processing ${i + 1} of ${total}...` : "Processing PDF...";
+          const buf = await this.processFiles[i].arrayBuffer();
+          croppedBuffers.push(await PDFEngine.cropPDF(buf, tmpl.cropRect));
         }
+        btnSubmit.textContent = "Formatting output...";
 
         let resultBytes, fileExt, mimeType;
         if (mode === "PNG ZIP") {
@@ -430,23 +449,16 @@ class App {
           mimeType = "application/pdf";
         }
 
-        // Instant Download
         const blob = new Blob([resultBytes], { type: mimeType });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `TrimLabel_${Security.safeFilePart(tmpl.marketplace)}_${this.processFiles.length}_Labels.${fileExt}`;
+        a.download = `TrimLabel_${Security.safeFilePart(tmpl.marketplace)}_${total}_Labels.${fileExt}`;
         a.click();
         URL.revokeObjectURL(url);
 
-        // Record history
-        this.addHistoryEntry({
-          marketplace: tmpl.marketplace,
-          filesCount: this.processFiles.length,
-          mode: mode
-        });
-
-        alert("Label processing complete! Download started automatically.");
+        this.addHistoryEntry({ marketplace: tmpl.marketplace, filesCount: total, mode });
+        alert("Your print file is ready. The download has started.");
       } catch (err) {
         console.error("Error processing PDFs:", err);
         alert("An error occurred during PDF processing. The file may be corrupted, encrypted or too complex.");
@@ -457,99 +469,48 @@ class App {
     });
   }
 
-  // Batch View
-  bindBatch() {
-    const dropzone = document.getElementById("batch-dropzone");
-    const fileInput = document.getElementById("batch-file-input");
-    const statusLabel = document.getElementById("batch-file-status");
-    const btnStart = document.getElementById("btn-batch-start");
-    const progressFill = document.getElementById("batch-progress-fill");
-    const progressStatus = document.getElementById("batch-progress-status");
-
-    this.setupDropzone(dropzone, fileInput, (files) => {
-      this.batchFiles = files;
-      statusLabel.textContent = `Loaded ${files.length} file(s) for batch processing.`;
-      this.autoDetectMarketplace(files[0], "batch-template-select", "batch-autodetect-badge");
+  renderProcessFiles() {
+    const list = document.getElementById("process-file-list");
+    const status = document.getElementById("process-file-status");
+    if (!list) return;
+    list.textContent = "";
+    this.processFiles.forEach((file, idx) => {
+      const li = document.createElement("li");
+      const name = document.createElement("span");
+      name.className = "file-name";
+      name.textContent = file.name;
+      const size = document.createElement("span");
+      size.className = "file-size";
+      size.textContent = Security.formatBytes ? Security.formatBytes(file.size) : `${Math.round(file.size / 1024)} KB`;
+      const rm = document.createElement("button");
+      rm.type = "button";
+      rm.className = "file-remove";
+      rm.setAttribute("aria-label", `Remove ${file.name}`);
+      rm.innerHTML = '<svg class="icon icon-sm"><use href="#i-x"/></svg>';
+      rm.addEventListener("click", () => {
+        this.processFiles.splice(idx, 1);
+        this.renderProcessFiles();
+      });
+      li.append(name, size, rm);
+      list.appendChild(li);
     });
-
-    btnStart.addEventListener("click", async () => {
-      if (this.batchFiles.length === 0) {
-        alert("Please select PDF files for batch processing.");
-        return;
+    const n = this.processFiles.length;
+    if (status) {
+      status.textContent = n === 0 ? "No files selected" : `${n} file${n === 1 ? "" : "s"} ready`;
+      if (n === 0) {
+        const badge = document.getElementById("process-autodetect-badge");
+        if (badge) badge.style.display = "none";
       }
+    }
+    this.updateProcessSummary();
+  }
 
-      const tmplId = document.getElementById("batch-template-select").value;
-      const tmpl = window.templateManager.getById(tmplId);
-      if (!tmpl) {
-        alert("Please select a crop template.");
-        return;
-      }
-
-      const format = document.getElementById("batch-format-select").value;
-      btnStart.disabled = true;
-
-      try {
-        const croppedBuffers = [];
-        const total = this.batchFiles.length;
-
-        for (let i = 0; i < total; i++) {
-          const file = this.batchFiles[i];
-          const pct = Math.round(((i + 1) / total) * 100);
-          progressFill.style.width = `${pct}%`;
-          progressStatus.textContent = `Processing file ${i + 1} of ${total}: ${file.name}`;
-
-          const buf = await file.arrayBuffer();
-          const croppedBytes = await PDFEngine.cropPDF(buf, tmpl.cropRect);
-          croppedBuffers.push(croppedBytes);
-        }
-
-        progressStatus.textContent = "Formatting output...";
-        let resultBytes, fileExt, mimeType;
-        if (format === "PNG ZIP") {
-          resultBytes = await PDFEngine.exportPNGZip(croppedBuffers, Security.safeFilePart(tmpl.marketplace));
-          fileExt = "zip";
-          mimeType = "application/zip";
-        } else if (format.startsWith("Thermal")) {
-          resultBytes = await PDFEngine.exportThermal(croppedBuffers, format);
-          fileExt = "pdf";
-          mimeType = "application/pdf";
-        } else {
-          let rows = 2, cols = 2;
-          if (format.includes("6-up")) {
-            rows = 2; cols = 3;
-          } else if (format.includes("2-up")) {
-            rows = 2; cols = 1;
-          }
-          resultBytes = await PDFEngine.exportGrid(croppedBuffers, rows, cols, this.settings.defaultPaper, this.settings.cutMarks);
-          fileExt = "pdf";
-          mimeType = "application/pdf";
-        }
-
-        const blob = new Blob([resultBytes], { type: mimeType });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `TrimLabel_Batch_${Security.safeFilePart(tmpl.marketplace)}_${total}_Labels.${fileExt}`;
-        a.click();
-        URL.revokeObjectURL(url);
-
-        progressStatus.textContent = `Batch processing complete! ${total} files exported.`;
-
-        // Record history
-        this.addHistoryEntry({
-          marketplace: tmpl.marketplace,
-          filesCount: total,
-          mode: format
-        });
-
-        alert(`Successfully processed ${total} labels! Download initiated.`);
-      } catch (err) {
-        console.error("Batch processing error:", err);
-        alert("Batch processing failed. A file may be corrupted, encrypted or too complex.");
-      } finally {
-        btnStart.disabled = false;
-      }
-    });
+  updateProcessSummary() {
+    const el = document.getElementById("process-summary");
+    if (!el) return;
+    const n = this.processFiles.length;
+    const mode = this.getRadio("process-layout", this.settings.defaultMode);
+    el.textContent = n === 0 ? "No files yet" : `${n} file${n === 1 ? "" : "s"} · ${mode}`;
   }
 
   // History

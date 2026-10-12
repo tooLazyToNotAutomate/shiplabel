@@ -1,3 +1,25 @@
+const LAYOUT_CARDS = [
+  { value: "A4 Sheet (4-up Grid)", title: "A4 sheet · 4", sub: "4 labels per page" },
+  { value: "A4 Sheet (6-up Grid)", title: "A4 sheet · 6", sub: "Saves the most paper" },
+  { value: "A4 Sheet (2-up Grid)", title: "A4 sheet · 2", sub: "Larger labels" },
+  { value: "Thermal 3x5", title: "Thermal 3×5", sub: "One label per page" },
+  { value: "Thermal 4x6", title: "Thermal 4×6", sub: "One label per page" },
+  { value: "PNG ZIP", title: "Images", sub: "PNG files in a ZIP" }
+];
+
+/** Radio-style button group. Buttons carry aria-checked so screen readers and CSS agree. */
+function choiceGrid(cls, btnCls, items, get, set) {
+  const wrap = h("div", { class: cls, role: "radiogroup" });
+  const paint = () => wrap.querySelectorAll("button").forEach(b => b.setAttribute("aria-checked", String(b.dataset.value === get())));
+  items.forEach(it => {
+    const b = h("button", { type: "button", role: "radio", class: btnCls, "data-value": it.value }, it.sub ? [h("b", {}, it.title), h("span", {}, it.sub)] : it.title);
+    b.addEventListener("click", () => { set(it.value); paint(); });
+    wrap.append(b);
+  });
+  paint();
+  return wrap;
+}
+
 Pages.process = {
   title: "Process Labels",
   render(root) {
@@ -13,7 +35,8 @@ Pages.process = {
     const go = h("button", { class: "btn", disabled: true }, "Process & Share");
 
     const refresh = () => {
-      list.replaceChildren(...files.map(f => h("div", { class: "file-item" }, h("span", {}, f.name), h("span", { class: "muted" }, Security.formatBytes(f.size)))));
+      list.replaceChildren(...files.map((f, i) => h("div", { class: "file-item" }, h("span", {}, f.name), h("span", { class: "muted" }, Security.formatBytes(f.size)),
+        h("button", { type: "button", class: "rm", "aria-label": `Remove ${f.name}`, onclick: () => { files.splice(i, 1); refresh(); } }, "×"))));
       go.disabled = files.length === 0;
     };
 
@@ -58,14 +81,16 @@ Pages.process = {
 
     root.append(
       h("div", { class: "card stack" },
-        h("div", { class: "drop", role: "button", tabindex: "0", onclick: () => input.click() }, "Tap to choose label PDFs"),
+        h("div", { class: "drop", role: "button", tabindex: "0", onclick: () => input.click() }, "Tap to add your PDFs"),
         input, list, errBox
       ),
       h("div", { class: "card stack" },
-        h("h2", {}, "Options"),
+        h("h2", {}, "Choose a layout"),
         selectField("Crop template", templates.map(t => ({ value: t.id, label: `${t.name} (${t.marketplace})` })), tmplId, v => (tmplId = v)),
-        selectField("Output mode", Security.OUTPUT_MODES, mode, v => (mode = v)),
-        selectField("Paper size (A4 grid)", Security.PAPER_SIZES, paper, v => (paper = v)),
+        h("span", { class: "field-title" }, "Layout"),
+        choiceGrid("layouts", "layout-card", LAYOUT_CARDS, () => mode, v => (mode = v)),
+        h("span", { class: "field-title" }, "Paper"),
+        choiceGrid("seg", "", Security.PAPER_SIZES.map(p => ({ value: p, title: p })), () => paper, v => (paper = v)),
         h("label", { class: "switch-row" }, "Draw cut marks",
           h("input", { type: "checkbox", checked: cutMarks, onchange: e => (cutMarks = e.target.checked) }))
       ),
