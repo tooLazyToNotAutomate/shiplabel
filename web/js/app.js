@@ -199,11 +199,12 @@ class App {
     if (overlay) overlay.addEventListener("click", () => toggleSidebar(false));
 
     document.querySelectorAll("[data-goto]").forEach(btn => {
-      btn.addEventListener("click", () => this.switchView(btn.getAttribute("data-goto")));
+      btn.addEventListener("click", (e) => { e.preventDefault(); this.switchView(btn.getAttribute("data-goto")); });
     });
 
     document.querySelectorAll("[data-scroll]").forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
         document.getElementById(btn.getAttribute("data-scroll"))?.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     });
@@ -274,8 +275,9 @@ class App {
 
         const badge = document.getElementById(badgeId);
         if (badge) {
-          badge.style.display = "inline-block";
-          badge.textContent = `Auto-detected: ${detectedMp} Crop Template`;
+          badge.style.display = "flex";
+          const text = document.getElementById("process-autodetect-text");
+          if (text) text.textContent = `We recognised ${detectedMp} labels and picked the right style for you.`;
         }
       }
     } catch (e) {
@@ -397,6 +399,7 @@ class App {
       r.addEventListener("change", () => this.updateProcessSummary());
     });
     this.renderProcessFiles();
+    document.getElementById("btn-detect-change")?.addEventListener("click", () => document.getElementById("process-template-select")?.focus());
 
     btnSubmit.addEventListener("click", async () => {
       if (this.processFiles.length === 0) {
@@ -481,7 +484,10 @@ class App {
       name.textContent = file.name;
       const size = document.createElement("span");
       size.className = "file-size";
-      size.textContent = Security.formatBytes ? Security.formatBytes(file.size) : `${Math.round(file.size / 1024)} KB`;
+      size.textContent = file._labels ? `${file._labels} label${file._labels === 1 ? "" : "s"}` : "…";
+      const ico = document.createElement("span");
+      ico.className = "file-ico";
+      ico.innerHTML = '<svg class="icon icon-sm"><use href="#i-files"/></svg>';
       const rm = document.createElement("button");
       rm.type = "button";
       rm.className = "file-remove";
@@ -491,7 +497,7 @@ class App {
         this.processFiles.splice(idx, 1);
         this.renderProcessFiles();
       });
-      li.append(name, size, rm);
+      li.append(ico, name, size, rm);
       list.appendChild(li);
     });
     const n = this.processFiles.length;
@@ -505,12 +511,35 @@ class App {
     this.updateProcessSummary();
   }
 
+  // Count the labels (pages) in each added file in the background, then refresh the totals
+  countLabels(file) {
+    if (file._labels !== undefined || file._counting) return;
+    file._counting = true;
+    file.arrayBuffer()
+      .then(buf => pdfjsLib.getDocument({ data: buf, ...PDFJS_SAFE_OPTS }).promise)
+      .then(pdf => { file._labels = pdf.numPages; pdf.destroy && pdf.destroy(); })
+      .catch(() => { file._labels = 1; })
+      .finally(() => { file._counting = false; this.updateProcessSummary(); });
+  }
+
   updateProcessSummary() {
-    const el = document.getElementById("process-summary");
-    if (!el) return;
-    const n = this.processFiles.length;
+    const labelsEl = document.getElementById("sum-labels");
+    if (!labelsEl) return;
+    this.processFiles.forEach(f => this.countLabels(f));
+    const labels = this.processFiles.reduce((n, f) => n + (f._labels || 0), 0);
     const mode = this.getRadio("process-layout", this.settings.defaultMode);
-    el.textContent = n === 0 ? "No files yet" : `${n} file${n === 1 ? "" : "s"} · ${mode}`;
+    let out, unit;
+    if (mode === "PNG ZIP") { out = labels; unit = labels === 1 ? "image" : "images"; }
+    else if (mode.startsWith("Thermal")) { out = labels; unit = labels === 1 ? "page" : "pages"; }
+    else {
+      const per = mode.includes("6-up") ? 6 : mode.includes("2-up") ? 2 : 4;
+      out = Math.ceil(labels / per);
+      unit = out === 1 ? "sheet" : "sheets";
+      unit = `${this.getRadio("process-paper", "A4")} ${unit}`;
+    }
+    labelsEl.textContent = labels;
+    document.getElementById("sum-out").textContent = out;
+    document.getElementById("sum-out-label").textContent = unit;
   }
 
   // History

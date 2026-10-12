@@ -22,3 +22,9 @@
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
+
+@font-face { font-family: "Plus Jakarta Sans"; font-weight: 500; font-display: swap; src: url("shared/fonts/plus-jakarta-500.ttf") format("truetype"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-weight: 600; font-display: swap; src: url("shared/fonts/plus-jakarta-600.ttf") format("truetype"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-weight: 700; font-display: swap; src: url("shared/fonts/plus-jakarta-700.ttf") format("truetype"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-weight: 800; font-display: swap; src: url("shared/fonts/plus-jakarta-800.ttf") format("truetype"); }
+body, button, select, input { font-family: "Plus Jakarta Sans", system-ui, sans-serif; }

@@ -40,6 +40,7 @@
     <symbol id="i-half" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 12h16"/></symbol>
     <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></symbol>
     <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3Z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
   </svg>
 
@@ -67,72 +68,230 @@
     <p class="nav-label">Workspace</p>
     <ul class="nav-menu">
       <li><button type="button" id="nav-dashboard" class="nav-item active" data-view="dashboard"><svg class="icon"><use href="#i-grid"/></svg>Home</button></li>
-      <li><button type="button" id="nav-process" class="nav-item" data-view="process"><svg class="icon"><use href="#i-printer"/></svg>Print Labels</button></li>
+      <li><button type="button" id="nav-process" class="nav-item" data-view="process"><svg class="icon"><use href="#i-printer"/></svg>Print labels</button></li>
       <li><button type="button" id="nav-history" class="nav-item" data-view="history"><svg class="icon"><use href="#i-clock"/></svg>Activity</button></li>
       <li><button type="button" id="nav-settings" class="nav-item" data-view="settings"><svg class="icon"><use href="#i-settings"/></svg>Settings</button></li>
       <li><button type="button" id="nav-about" class="nav-item" data-view="about"><svg class="icon"><use href="#i-info"/></svg>About</button></li>
     </ul>
 
-    <div class="sidebar-footer">100% offline &middot; v1.0.0</div>
+    <div class="sidebar-footer"><svg class="icon" style="vertical-align:-4px;margin-right:8px"><use href="#i-shield"/></svg>Your files never leave this device</div>
   </aside>
 
   <!-- Main Content View Container -->
   <main id="main-content">
 
-    <!-- 1. HOME VIEW -->
+    <!-- 1. HOME VIEW (ported from the TrimLabel design board) -->
     <section id="view-dashboard" class="view active">
-      <div class="home-hero">
-        <div class="home-hero-text">
-          <span class="hero-eyebrow">Free &middot; Works offline &middot; No sign-up</span>
-          <h1>Shipping labels, print&#8209;ready in seconds.</h1>
-          <p>Drop your marketplace PDFs. TrimLabel trims each label and lays them out for your printer. Nothing is uploaded; it all happens on your device.</p>
-          <div class="hero-actions">
-            <button type="button" id="btn-hero-process" class="btn btn-light" data-goto="process">Print labels<svg class="icon"><use href="#i-printer"/></svg></button>
-            <button type="button" id="btn-hero-how" class="btn btn-ghost-light" data-scroll="how-it-works">See how it works</button>
-          </div>
-          <div class="chip-row" aria-label="Supported marketplaces">
-            <span class="chip">Flipkart</span><span class="chip">Meesho</span><span class="chip">Amazon</span><span class="chip">Shiprocket</span>
-          </div>
+    <!-- Hero -->
+    <section class="m-hero" style="position:relative;overflow:hidden;background:#1B1B39;border-radius:32px;padding:64px;display:flex;flex-wrap:wrap;align-items:center;gap:32px;color:#fff">
+      <div style="position:absolute;right:-90px;top:-110px;width:420px;height:420px;border-radius:50%;border:56px solid rgba(57,101,250,0.30)"></div>
+      <div style="position:relative;flex:1 1 380px;display:flex;flex-direction:column;gap:26px;min-width:0">
+        <div style="align-self:flex-start;display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:rgba(153,183,252,0.16);color:#99B7FC;font-size:13px;font-weight:700">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>
+          Free · Private · Works offline
         </div>
-        <div class="home-hero-art" aria-hidden="true">
-          <svg viewBox="0 0 220 280" class="sheet-art">
-            <rect x="10" y="6" width="200" height="268" rx="10" fill="#fff"/>
-            <g fill="#e9ebff" stroke="#99b7fc" stroke-dasharray="4 3">
-              <rect x="24" y="22" width="76" height="112" rx="6"/><rect x="120" y="22" width="76" height="112" rx="6"/>
-              <rect x="24" y="148" width="76" height="112" rx="6"/><rect x="120" y="148" width="76" height="112" rx="6"/>
-            </g>
-            <g fill="#1b1b39">
-              <rect x="32" y="32" width="44" height="6" rx="2"/><rect x="32" y="44" width="30" height="4" rx="2" opacity=".5"/>
-              <rect x="128" y="32" width="44" height="6" rx="2"/><rect x="128" y="44" width="30" height="4" rx="2" opacity=".5"/>
-              <rect x="32" y="158" width="44" height="6" rx="2"/><rect x="32" y="170" width="30" height="4" rx="2" opacity=".5"/>
-              <rect x="128" y="158" width="44" height="6" rx="2"/><rect x="128" y="170" width="30" height="4" rx="2" opacity=".5"/>
-            </g>
-            <g fill="#1b1b39" opacity=".85">
-              <rect x="32" y="74" width="60" height="40"/><rect x="128" y="74" width="60" height="40"/>
-              <rect x="32" y="200" width="60" height="40"/><rect x="128" y="200" width="60" height="40"/>
-            </g>
-            <circle cx="196" cy="22" r="14" fill="#3965fa"/><path d="m190 22 5 5 8-10" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+        <h1 class="m-h1" style="margin:0;font-size:56px;line-height:1.04;font-weight:800;letter-spacing:-1.6px">Shipping labels,<br>print-ready in seconds.</h1>
+        <p style="margin:0;font-size:19px;line-height:1.5;color:#D6DEF8;max-width:460px">Drop your marketplace PDFs. We trim, arrange and format them for your printer.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:6px">
+          <a href="#" data-goto="process" style="display:inline-flex;align-items:center;gap:10px;padding:17px 28px;border-radius:14px;background:#3965FA;color:#fff;font-size:16px;font-weight:700;box-shadow:0 10px 24px rgba(57,101,250,0.35)">
+            Print labels
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#how-it-works" data-scroll="how-it-works" style="display:inline-flex;align-items:center;padding:17px 26px;border-radius:14px;border:1.5px solid rgba(153,183,252,0.5);color:#fff;font-size:16px;font-weight:700">See how it works</a>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px;padding-top:24px;border-top:1px solid rgba(153,183,252,0.25)">
+          <span style="font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#99B7FC">Made for</span>
+          <div style="display:flex;flex-wrap:wrap;gap:10px">
+            <span style="padding:9px 18px;border-radius:12px;background:#24244A;border:1.5px solid rgba(153,183,252,0.45);color:#fff;font-size:14px;font-weight:700">Flipkart</span>
+            <span style="padding:9px 18px;border-radius:12px;background:#24244A;border:1.5px solid rgba(153,183,252,0.45);color:#fff;font-size:14px;font-weight:700">Meesho</span>
+            <span style="padding:9px 18px;border-radius:12px;background:#24244A;border:1.5px solid rgba(153,183,252,0.45);color:#fff;font-size:14px;font-weight:700">Amazon</span>
+            <span style="padding:9px 18px;border-radius:12px;background:#24244A;border:1.5px solid rgba(153,183,252,0.45);color:#fff;font-size:14px;font-weight:700">Shiprocket</span>
+          </div>
         </div>
       </div>
 
-      <div id="how-it-works" class="section-head">
-        <span class="eyebrow-blue">How it works</span>
-        <h2>Three steps. No setup.</h2>
+      <!-- Hero illustration: a finished A4 sheet -->
+      <div class="m-hero-art" style="position:relative;flex:0 0 400px;height:430px;max-width:100%">
+        <div style="position:absolute;left:40px;top:10px;width:320px;height:410px;background:#fff;border-radius:16px;transform:rotate(-4deg);box-shadow:0 30px 60px rgba(0,0,0,0.35);padding:22px;box-sizing:border-box;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px">
+          <div style="border:2px solid #E9EBFF;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;gap:6px;align-items:center"><div style="width:18px;height:18px;border-radius:5px;background:#3965FA"></div><div style="flex:1;height:7px;border-radius:4px;background:#DDE0F2"></div></div>
+            <div style="height:40px;background:repeating-linear-gradient(90deg,#1B1B39 0 2px,transparent 2px 5px)"></div>
+            <div style="height:7px;border-radius:4px;background:#DDE0F2"></div><div style="height:7px;width:60%;border-radius:4px;background:#DDE0F2"></div>
+            <div style="margin-top:auto;height:22px;border-radius:6px;background:#E9EBFF"></div>
+          </div>
+          <div style="border:2px solid #E9EBFF;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;gap:6px;align-items:center"><div style="width:18px;height:18px;border-radius:5px;background:#99B7FC"></div><div style="flex:1;height:7px;border-radius:4px;background:#DDE0F2"></div></div>
+            <div style="height:40px;background:repeating-linear-gradient(90deg,#1B1B39 0 3px,transparent 3px 6px)"></div>
+            <div style="height:7px;border-radius:4px;background:#DDE0F2"></div><div style="height:7px;width:70%;border-radius:4px;background:#DDE0F2"></div>
+            <div style="margin-top:auto;height:22px;border-radius:6px;background:#E9EBFF"></div>
+          </div>
+          <div style="border:2px solid #E9EBFF;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;gap:6px;align-items:center"><div style="width:18px;height:18px;border-radius:5px;background:#99B7FC"></div><div style="flex:1;height:7px;border-radius:4px;background:#DDE0F2"></div></div>
+            <div style="height:40px;background:repeating-linear-gradient(90deg,#1B1B39 0 2px,transparent 2px 4px)"></div>
+            <div style="height:7px;border-radius:4px;background:#DDE0F2"></div><div style="height:7px;width:50%;border-radius:4px;background:#DDE0F2"></div>
+            <div style="margin-top:auto;height:22px;border-radius:6px;background:#E9EBFF"></div>
+          </div>
+          <div style="border:2px solid #E9EBFF;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;gap:6px;align-items:center"><div style="width:18px;height:18px;border-radius:5px;background:#3965FA"></div><div style="flex:1;height:7px;border-radius:4px;background:#DDE0F2"></div></div>
+            <div style="height:40px;background:repeating-linear-gradient(90deg,#1B1B39 0 3px,transparent 3px 5px)"></div>
+            <div style="height:7px;border-radius:4px;background:#DDE0F2"></div><div style="height:7px;width:65%;border-radius:4px;background:#DDE0F2"></div>
+            <div style="margin-top:auto;height:22px;border-radius:6px;background:#E9EBFF"></div>
+          </div>
+        </div>
+        <div style="position:absolute;left:0;bottom:34px;display:flex;align-items:center;gap:10px;padding:9px 18px 9px 10px;border-radius:999px;background:#fff;color:#1B1B39;font-size:14px;font-weight:800;box-shadow:0 14px 30px rgba(0,0,0,0.35)"><span style="width:26px;height:26px;border-radius:50%;background:#047857;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span>4 labels per page</div>
       </div>
-      <ol class="steps">
-        <li class="step-card"><div class="step-ico"><svg class="icon"><use href="#i-files"/></svg></div><h3>Add your PDFs</h3><p>Drop one file or hundreds. Flipkart, Meesho, Amazon and Shiprocket are recognised automatically.</p></li>
-        <li class="step-card"><div class="step-ico"><svg class="icon"><use href="#i-crop"/></svg></div><h3>We trim the label</h3><p>Only the shipping label is kept. Invoices and blank margins are cut away.</p></li>
-        <li class="step-card"><div class="step-ico"><svg class="icon"><use href="#i-printer"/></svg></div><h3>Print and ship</h3><p>Get an A4 sheet with cut marks, a thermal 3x5 / 4x6 PDF, or PNG images.</p></li>
-      </ol>
+    </section>
 
-      <div class="band">
-        <div class="band-item"><svg class="icon"><use href="#i-shield"/></svg><div><strong>Private by design</strong><span>Your PDFs never leave this browser.</span></div></div>
-        <div class="band-item"><svg class="icon"><use href="#i-zap"/></svg><div><strong>Works offline</strong><span>No account, no waiting for uploads.</span></div></div>
-        <div class="band-item"><svg class="icon"><use href="#i-layers"/></svg><div><strong>Made for sellers</strong><span>Save paper with up to 6 labels per sheet.</span></div></div>
+    <!-- How it works -->
+    <section id="how-it-works" style="display:flex;flex-direction:column;gap:28px">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:13px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#3965FA">How it works</span>
+        <h2 style="margin:0;font-size:34px;font-weight:800;letter-spacing:-0.8px">Three steps. No setup.</h2>
       </div>
 
-      <footer class="home-footer">&copy; TrimLabel &middot; <button type="button" class="link-btn" data-goto="about">About &amp; requests</button></footer>
+      <div class="m-steps" style="display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:14px">
+
+        <!-- Step 1 -->
+        <div class="card" style="background:#fff;border:1.5px solid #DDE0F2;border-radius:24px;padding:14px 14px 26px;display:flex;flex-direction:column;gap:20px">
+          <div style="height:200px;border-radius:16px;background:#E9EBFF;display:flex;align-items:center;justify-content:center">
+            <svg width="230" height="170" viewBox="0 0 230 170" fill="none" role="img" aria-label="PDF files being added">
+              <rect x="58" y="22" width="84" height="108" rx="10" fill="#fff" stroke="#99B7FC" stroke-width="2" transform="rotate(-8 100 76)"/>
+              <rect x="82" y="16" width="84" height="108" rx="10" fill="#fff" stroke="#99B7FC" stroke-width="2" transform="rotate(5 124 70)"/>
+              <rect x="66" y="26" width="92" height="116" rx="10" fill="#fff" stroke="#3965FA" stroke-width="2.5"/>
+              <rect x="78" y="40" width="36" height="18" rx="5" fill="#3965FA"/>
+              <text x="96" y="53" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="800" fill="#fff">PDF</text>
+              <rect x="78" y="70" width="68" height="6" rx="3" fill="#DDE0F2"/><rect x="78" y="84" width="52" height="6" rx="3" fill="#DDE0F2"/><rect x="78" y="98" width="60" height="6" rx="3" fill="#DDE0F2"/>
+              <circle cx="168" cy="128" r="22" fill="#3965FA"/>
+              <path d="M168 138V118M159 126l9-9 9 9" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div style="padding:0 12px;display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;align-items:center;gap:10px"><span style="width:28px;height:28px;border-radius:50%;background:#3965FA;color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center">1</span><span style="font-size:20px;font-weight:800;letter-spacing:-0.3px">Add your PDFs</span></div>
+            <span style="font-size:15px;color:#4A4D6B;line-height:1.5">One file or hundreds.</span>
+          </div>
+        </div>
+
+        <div class="m-arrow" style="width:44px;height:44px;border-radius:50%;background:#fff;border:1.5px solid #DDE0F2;display:flex;align-items:center;justify-content:center;color:#3965FA">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="card" style="background:#fff;border:1.5px solid #DDE0F2;border-radius:24px;padding:14px 14px 26px;display:flex;flex-direction:column;gap:20px">
+          <div style="height:200px;border-radius:16px;background:#E9EBFF;display:flex;align-items:center;justify-content:center">
+            <svg width="230" height="170" viewBox="0 0 230 170" fill="none" role="img" aria-label="Label being trimmed from a full page">
+              <rect x="62" y="10" width="106" height="150" rx="10" fill="#fff" stroke="#DDE0F2" stroke-width="2"/>
+              <rect x="72" y="20" width="86" height="66" rx="6" fill="#E9EBFF"/>
+              <rect x="80" y="28" width="16" height="14" rx="4" fill="#3965FA"/>
+              <rect x="102" y="31" width="44" height="6" rx="3" fill="#99B7FC"/>
+              <path d="M80 50h66M83 50v26M88 50v26M95 50v26M99 50v26M106 50v26M110 50v26M118 50v26M123 50v26M131 50v26M138 50v26M143 50v26" stroke="#1B1B39" stroke-width="2"/>
+              <rect x="72" y="100" width="86" height="6" rx="3" fill="#EDEDED"/><rect x="72" y="114" width="70" height="6" rx="3" fill="#EDEDED"/><rect x="72" y="128" width="78" height="6" rx="3" fill="#EDEDED"/><rect x="72" y="142" width="50" height="6" rx="3" fill="#EDEDED"/>
+              <path d="M62 94h106" stroke="#99B7FC" stroke-width="2" stroke-dasharray="5 5"/>
+              <path d="M66 22v-8h8M164 22v-8h-8M66 84v8h8M164 84v8h-8" stroke="#3965FA" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 0)"/>
+              <circle cx="176" cy="40" r="20" fill="#047857"/>
+              <path d="m167 40 6 6 11-12" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div style="padding:0 12px;display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;align-items:center;gap:10px"><span style="width:28px;height:28px;border-radius:50%;background:#3965FA;color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center">2</span><span style="font-size:20px;font-weight:800;letter-spacing:-0.3px">We trim the label</span></div>
+            <span style="font-size:15px;color:#4A4D6B;line-height:1.5">Invoices are removed automatically.</span>
+          </div>
+        </div>
+
+        <div class="m-arrow" style="width:44px;height:44px;border-radius:50%;background:#fff;border:1.5px solid #DDE0F2;display:flex;align-items:center;justify-content:center;color:#3965FA">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="card" style="background:#fff;border:1.5px solid #DDE0F2;border-radius:24px;padding:14px 14px 26px;display:flex;flex-direction:column;gap:20px">
+          <div style="height:200px;border-radius:16px;background:#E9EBFF;display:flex;align-items:center;justify-content:center">
+            <svg width="230" height="170" viewBox="0 0 230 170" fill="none" role="img" aria-label="A print-ready sheet of labels">
+              <rect x="55" y="8" width="120" height="154" rx="10" fill="#fff" stroke="#3965FA" stroke-width="2.5"/>
+              <rect x="66" y="20" width="46" height="62" rx="6" fill="#E9EBFF" stroke="#99B7FC" stroke-width="1.5"/>
+              <rect x="118" y="20" width="46" height="62" rx="6" fill="#E9EBFF" stroke="#99B7FC" stroke-width="1.5"/>
+              <rect x="66" y="88" width="46" height="62" rx="6" fill="#E9EBFF" stroke="#99B7FC" stroke-width="1.5"/>
+              <rect x="118" y="88" width="46" height="62" rx="6" fill="#E9EBFF" stroke="#99B7FC" stroke-width="1.5"/>
+              <path d="M72 44h34M72 50h34M72 56h34M124 44h34M124 50h34M124 56h34M72 112h34M72 118h34M72 124h34M124 112h34M124 118h34M124 124h34" stroke="#1B1B39" stroke-width="2" stroke-dasharray="2 2"/>
+              <path d="M115 14v140" stroke="#99B7FC" stroke-width="1.5" stroke-dasharray="4 4"/>
+              <rect x="150" y="104" width="62" height="46" rx="12" fill="#1B1B39"/>
+              <path d="M165 120v-8h32v8M165 134h32v10h-32zM161 120h40a4 4 0 0 1 4 4v10h-8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div style="padding:0 12px;display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;align-items:center;gap:10px"><span style="width:28px;height:28px;border-radius:50%;background:#3965FA;color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center">3</span><span style="font-size:20px;font-weight:800;letter-spacing:-0.3px">Print or share</span></div>
+            <span style="font-size:15px;color:#4A4D6B;line-height:1.5">Sheets ready for any printer.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Shortcuts -->
+    <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px">
+      <a class="card" href="#" data-goto="process" style="display:flex;align-items:center;gap:18px;padding:24px;border-radius:20px;background:#3965FA;color:#fff;border:1.5px solid #3965FA">
+        <span style="width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><path d="M5 9h14a2 2 0 0 1 2 2v6H3v-6a2 2 0 0 1 2-2Z"/><path d="M6 15h12v6H6z"/></svg></span>
+        <span style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font-size:18px;font-weight:800">Print labels</span><span style="font-size:14px;opacity:0.85">Start a new batch</span></span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </a>
+      <a class="card" href="#" data-goto="settings" style="display:flex;align-items:center;gap:18px;padding:24px;border-radius:20px;background:#fff;border:1.5px solid #DDE0F2">
+        <span style="width:52px;height:52px;border-radius:14px;background:#E9EBFF;color:#3965FA;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></span>
+        <span style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font-size:18px;font-weight:800">Settings</span><span style="font-size:14px;color:#4A4D6B">Defaults and options</span></span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6F8F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </a>
+      <a class="card" href="#" data-goto="history" style="display:flex;align-items:center;gap:18px;padding:24px;border-radius:20px;background:#fff;border:1.5px solid #DDE0F2">
+        <span style="width:52px;height:52px;border-radius:14px;background:#E9EBFF;color:#3965FA;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <span style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font-size:18px;font-weight:800">Activity</span><span style="font-size:14px;color:#4A4D6B">Past print jobs</span></span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6F8F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </a>
+    </section>
+
+    <!-- Trust strip -->
+    <section class="m-trust" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;padding:36px 40px;border-radius:24px;background:#E9EBFF">
+      <div style="display:flex;align-items:center;gap:16px">
+        <span style="width:46px;height:46px;border-radius:50%;background:#fff;color:#3965FA;display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+        <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:800">Private by design</span><span style="font-size:14px;color:#4A4D6B">Files stay on your device</span></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <span style="width:46px;height:46px;border-radius:50%;background:#fff;color:#3965FA;display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 19.5h.01"/><path d="M3 3l18 18"/></svg></span>
+        <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:800">Works offline</span><span style="font-size:14px;color:#4A4D6B">No account, no upload</span></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <span style="width:46px;height:46px;border-radius:50%;background:#fff;color:#3965FA;display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg></span>
+        <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:800">Built for volume</span><span style="font-size:14px;color:#4A4D6B">Hundreds of labels at once</span></span>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="m-footer" style="background:#1B1B39;border-radius:28px;padding:44px 48px 28px;color:#C9D3F5;display:flex;flex-direction:column;gap:36px">
+      <div style="display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between">
+        <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:14px;max-width:320px">
+          <div style="display:flex;align-items:center;gap:12px">
+            <span style="width:36px;height:36px;border-radius:10px;background:#3965FA;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"/><path d="M7.5 7.5h.01"/></svg></span>
+            <span style="font-size:19px;font-weight:800;color:#fff;letter-spacing:-0.3px">TrimLabel</span>
+          </div>
+          <span style="font-size:15px;line-height:1.55">Print-ready shipping labels, made simple.</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:56px">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <span style="font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#99B7FC">Product</span>
+            <a href="#" data-goto="process" style="font-size:15px;font-weight:600;color:#fff">Print labels</a>
+            <a href="#" data-goto="settings" style="font-size:15px;font-weight:600;color:#fff">Settings</a>
+            <a href="#" data-goto="history" style="font-size:15px;font-weight:600;color:#fff">Activity</a>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <span style="font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#99B7FC">Support</span>
+            <a href="#" data-goto="about" style="font-size:15px;font-weight:600;color:#fff">About</a>
+            <a href="mailto:swill8580@gmail.com?subject=TrimLabel%20template%20request" style="font-size:15px;font-weight:600;color:#fff">Request a layout</a>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <span style="font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#99B7FC">Legal</span>
+            <a href="#" data-goto="about" style="font-size:15px;font-weight:600;color:#fff">Privacy</a>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-top:22px;border-top:1px solid rgba(153,183,252,0.25);font-size:13px">
+        <span>© 2026 TrimLabel. All rights reserved.</span>
+        <span style="display:flex;align-items:center;gap:8px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#99B7FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/></svg>Your files never leave your device</span>
+      </div>
+    </footer>
     </section>
 
     <!-- 2. PRINT LABELS VIEW (single files and big batches) -->
@@ -140,7 +299,7 @@
       <div class="page-header">
         <div>
           <h1 class="page-title">Print labels</h1>
-          <p class="page-desc">Add your PDFs, choose a layout and download a print-ready file. Works for one file or hundreds.</p>
+          <p class="page-desc">Add your PDFs, pick a layout, and print.</p>
         </div>
       </div>
 
@@ -148,13 +307,14 @@
         <h3 class="card-title"><span class="step-num">1</span>Add your PDFs</h3>
         <div class="dropzone" id="process-dropzone">
           <div class="dropzone-icon"><svg class="icon"><use href="#i-files"/></svg></div>
-          <div class="dropzone-title">Drop PDFs here, or click to browse</div>
-          <div class="dropzone-desc">One file or hundreds. Add more at any time.</div>
+          <div class="dropzone-title">Drop PDFs here</div>
+          <div class="dropzone-desc">or</div>
+          <span class="btn btn-primary dz-btn">Choose files</span>
           <input type="file" id="process-file-input" multiple accept=".pdf" style="display:none;">
         </div>
         <ul class="file-list" id="process-file-list" aria-label="Selected files"></ul>
         <div id="process-file-status" class="status-text">No files selected</div>
-        <div id="process-autodetect-badge" style="display:none; margin-top: 8px;" class="badge"></div>
+        <div id="process-autodetect-badge" class="detect-banner" style="display:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg><span id="process-autodetect-text"></span><button type="button" class="link-btn detect-change" id="btn-detect-change">Change</button></div>
       </div>
 
       <div class="card">
@@ -162,33 +322,33 @@
         <div class="layout-grid" role="radiogroup" aria-label="Output layout">
           <label class="layout-card" for="layout-4up">
             <input type="radio" name="process-layout" id="layout-4up" value="A4 Sheet (4-up Grid)" checked>
-            <span class="layout-thumb"><svg viewBox="0 0 48 60" aria-hidden="true"><rect x="1" y="1" width="46" height="58" rx="3" fill="#fff" stroke="#c7d0ee"/><rect x="5.5" y="5.5" width="17.0" height="23.0" rx="1.5" fill="#e9ebff" stroke="#3965fa" stroke-width=".8"/><rect x="25.5" y="5.5" width="17.0" height="23.0" rx="1.5" fill="#e9ebff" stroke="#3965fa" stroke-width=".8"/><rect x="5.5" y="31.5" width="17.0" height="23.0" rx="1.5" fill="#e9ebff" stroke="#3965fa" stroke-width=".8"/><rect x="25.5" y="31.5" width="17.0" height="23.0" rx="1.5" fill="#e9ebff" stroke="#3965fa" stroke-width=".8"/></svg></span>
-            <span class="layout-name">A4 sheet &middot; 4</span><span class="layout-sub">4 labels per page</span>
+            <span class="opt-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span><span class="opt-thumb" style="display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(2,1fr);gap:6px;padding:10px;box-sizing:border-box"><span style="border-radius:4px;background:#99B7FC"></span><span style="border-radius:4px;background:#99B7FC"></span><span style="border-radius:4px;background:#99B7FC"></span><span style="border-radius:4px;background:#99B7FC"></span></span>
+            <span class="opt-text"><span class="opt-title">4 per sheet</span><span class="opt-sub">A4 paper</span></span>
           </label>
           <label class="layout-card" for="layout-6up">
             <input type="radio" name="process-layout" id="layout-6up" value="A4 Sheet (6-up Grid)">
-            <span class="layout-thumb"><svg viewBox="0 0 48 60" aria-hidden="true"><rect x="1" y="1" width="46" height="58" rx="3" fill="#fff" stroke="#c7d0ee"/><rect x="5.5" y="5.5" width="10.3" height="23.0" rx="1.5" fill="#e9ebff" stroke="#3965fa" stroke-width=".8"/><rect x="18.8" y="5.5" width="10.3" height="23.0" rx="1.5" fill="#e9ebff" stroke="#3965fa" stroke-width=".8"/><rect x="32.2" y="5.5" width="10.3" height="23.0" rx="1.5" fill="#e9ebff" stroke="#3965fa" stroke-width=".8"/><rect x="5.5" y="31.5" width="10.3" height="23.0" rx="1.5" fill="#e9ebff" stroke="#3965fa" stroke-width=".8"/><rect x="18.8" y="31.5" width="10.3" height="23.0" rx="1.5" fill="#e9ebff" stroke="#3965fa" stroke-width=".8"/><rect x="32.2" y="31.5" width="10.3" height="23.0" rx="1.5" fill="#e9ebff" stroke="#3965fa" stroke-width=".8"/></svg></span>
-            <span class="layout-name">A4 sheet &middot; 6</span><span class="layout-sub">Saves the most paper</span>
+            <span class="opt-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span><span class="opt-thumb" style="display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(3,1fr);gap:5px;padding:10px;box-sizing:border-box"><span style="border-radius:3px;background:#99B7FC"></span><span style="border-radius:3px;background:#99B7FC"></span><span style="border-radius:3px;background:#99B7FC"></span><span style="border-radius:3px;background:#99B7FC"></span><span style="border-radius:3px;background:#99B7FC"></span><span style="border-radius:3px;background:#99B7FC"></span></span>
+            <span class="opt-text"><span class="opt-title">6 per sheet</span><span class="opt-sub">A4 paper</span></span>
           </label>
           <label class="layout-card" for="layout-2up">
             <input type="radio" name="process-layout" id="layout-2up" value="A4 Sheet (2-up Grid)">
-            <span class="layout-thumb"><svg viewBox="0 0 48 60" aria-hidden="true"><rect x="1" y="1" width="46" height="58" rx="3" fill="#fff" stroke="#c7d0ee"/><rect x="5.5" y="5.5" width="37.0" height="23.0" rx="1.5" fill="#e9ebff" stroke="#3965fa" stroke-width=".8"/><rect x="5.5" y="31.5" width="37.0" height="23.0" rx="1.5" fill="#e9ebff" stroke="#3965fa" stroke-width=".8"/></svg></span>
-            <span class="layout-name">A4 sheet &middot; 2</span><span class="layout-sub">Larger labels</span>
+            <span class="opt-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span><span class="opt-thumb" style="display:grid;grid-template-columns:repeat(1,1fr);grid-template-rows:repeat(2,1fr);gap:6px;padding:10px;box-sizing:border-box"><span style="border-radius:4px;background:#99B7FC"></span><span style="border-radius:4px;background:#99B7FC"></span></span>
+            <span class="opt-text"><span class="opt-title">2 per sheet</span><span class="opt-sub">A4 paper</span></span>
           </label>
           <label class="layout-card" for="layout-t35">
             <input type="radio" name="process-layout" id="layout-t35" value="Thermal 3x5">
-            <span class="layout-thumb"><svg viewBox="0 0 48 60" aria-hidden="true"><rect x="13.0" y="13.0" width="22" height="34" rx="2" fill="#e9ebff" stroke="#3965fa" stroke-width="1"/></svg></span>
-            <span class="layout-name">Thermal 3&times;5</span><span class="layout-sub">One label per page</span>
+            <span class="opt-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span><span class="opt-thumb" style="display:flex;align-items:center;justify-content:center"><span style="width:50px;height:80px;border-radius:5px;background:#99B7FC"></span></span>
+            <span class="opt-text"><span class="opt-title">Thermal 3&times;5</span><span class="opt-sub">One per page</span></span>
           </label>
           <label class="layout-card" for="layout-t46">
             <input type="radio" name="process-layout" id="layout-t46" value="Thermal 4x6">
-            <span class="layout-thumb"><svg viewBox="0 0 48 60" aria-hidden="true"><rect x="11.0" y="11.0" width="26" height="38" rx="2" fill="#e9ebff" stroke="#3965fa" stroke-width="1"/></svg></span>
-            <span class="layout-name">Thermal 4&times;6</span><span class="layout-sub">One label per page</span>
+            <span class="opt-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span><span class="opt-thumb" style="display:flex;align-items:center;justify-content:center"><span style="width:56px;height:84px;border-radius:5px;background:#99B7FC"></span></span>
+            <span class="opt-text"><span class="opt-title">Thermal 4&times;6</span><span class="opt-sub">One per page</span></span>
           </label>
           <label class="layout-card" for="layout-png">
             <input type="radio" name="process-layout" id="layout-png" value="PNG ZIP">
-            <span class="layout-thumb"><svg viewBox="0 0 48 60" aria-hidden="true"><rect x="6" y="12" width="36" height="36" rx="3" fill="#e9ebff" stroke="#3965fa"/><path d="m10 42 10-12 8 8 5-5 5 9" fill="none" stroke="#3965fa" stroke-width="1.5" stroke-linejoin="round"/><circle cx="17" cy="21" r="3" fill="#3965fa"/></svg></span>
-            <span class="layout-name">Images</span><span class="layout-sub">PNG files in a ZIP</span>
+            <span class="opt-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span><span class="opt-thumb" style="display:flex;align-items:center;justify-content:center;color:#3965FA"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-8 9"/></svg></span>
+            <span class="opt-text"><span class="opt-title">Images</span><span class="opt-sub">Saved as a ZIP</span></span>
           </label>
         </div>
         <div class="form-row" style="margin-top: 18px;">
@@ -218,7 +378,11 @@
       </div>
 
       <div class="action-bar">
-        <div class="action-summary" id="process-summary" role="status" aria-live="polite">No files yet</div>
+        <div class="action-stats" id="process-summary" role="status" aria-live="polite">
+          <div><b id="sum-labels">0</b><span>labels</span></div>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#99B7FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <div><b id="sum-out">0</b><span id="sum-out-label">A4 sheets</span></div>
+        </div>
         <button type="button" class="btn btn-primary btn-cta" id="btn-process-submit"><svg class="icon"><use href="#i-download"/></svg>Create print file</button>
       </div>
     </section>

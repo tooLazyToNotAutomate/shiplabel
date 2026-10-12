@@ -37,3 +37,26 @@
 .step b { font-size: 15px; }
 .step span { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
 .tiles .tile:last-child:nth-child(odd) { grid-column: 1 / -1; min-height: 0; }
+
+/* Phone home, board style */
+.hero { border-radius: 26px; padding: 28px 22px 26px; display: flex; flex-direction: column; gap: 14px; }
+.hero h2 { font-size: 34px; line-height: 1.08; font-weight: 800; letter-spacing: -1px; margin: 0; }
+.hero p { font-size: 16px; line-height: 1.45; margin: 0; }
+.hero-tag { align-self: flex-start; padding: 6px 12px; font-size: 12px; font-weight: 700; margin: 0; }
+.hero .btn { background: var(--blue); color: #fff; min-height: 54px; border-radius: 14px; font-size: 17px; font-weight: 700; box-shadow: 0 10px 22px rgb(57 101 250 / .4); }
+.hero .btn:active { background: var(--blue-press); }
+.section-title.big { font-size: 22px; font-weight: 800; letter-spacing: -.4px; text-transform: none; color: var(--text); margin: 26px 4px 14px; }
+.steps-col { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+.step-row { display: flex; align-items: center; gap: 16px; background: var(--card); border: 1.5px solid var(--border); border-radius: 20px; padding: 14px; animation: rise .45s ease both; }
+.step-art { flex: none; width: 92px; height: 92px; border-radius: 14px; background: var(--pale-blue); display: grid; place-items: center; }
+.step-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.step-kicker { font-size: 12px; font-weight: 800; color: var(--blue); letter-spacing: .06em; }
+.step-body b { font-size: 18px; font-weight: 800; letter-spacing: -.2px; }
+.step-body span:last-child { font-size: 14px; color: var(--text-2); }
+.tile { min-height: 112px; justify-content: space-between; border: 1.5px solid var(--border); border-radius: 20px; }
+.tile b { font-size: 16px; font-weight: 800; }
+.privacy { padding: 18px; border-radius: 20px; border: 1.5px solid var(--border); gap: 14px; }
+.privacy .ico { width: 44px; height: 44px; padding: 11px; border-radius: 50%; background: var(--success-bg); }
+.privacy-text { display: flex; flex-direction: column; gap: 2px; }
+.privacy-text b { font-size: 15px; font-weight: 800; color: var(--text); }
+.privacy-text span { font-size: 13px; color: var(--text-2); }
