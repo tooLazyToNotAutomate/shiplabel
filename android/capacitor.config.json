@@ -8,5 +8,15 @@
   },
   "server": {
     "androidScheme": "https"
+  },
+  "plugins": {
+    "CapacitorUpdater": {
+      "autoUpdate": false,
+      "appReadyTimeout": 30000,
+      "resetWhenUpdate": false,
+      "statsUrl": "",
+      "channelUrl": "",
+      "updateUrl": ""
+    }
   }
 }

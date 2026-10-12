@@ -42,3 +42,26 @@ label.field > select, label.field > input[type=text] {
 }
 .toast.error { background: var(--danger); }
 .toast.ok { background: var(--success); }
+
+/* Update blockers + actionable toast */
+.blocker {
+  position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center;
+  padding: calc(var(--safe-top) + 16px) 16px calc(var(--safe-bottom) + 16px); background: rgba(27, 27, 57, .92);
+}
+.blocker-card {
+  width: 100%; max-width: 420px; background: var(--card); border-radius: var(--radius); padding: 24px;
+  display: flex; flex-direction: column; gap: 12px; text-align: center; align-items: stretch;
+}
+.blocker-card h2 { font-size: 20px; }
+.blocker-card p { font-size: 14px; line-height: 1.5; }
+.blocker-ico { width: 44px; height: 44px; margin: 0 auto; stroke: var(--blue); fill: none; stroke-width: 1.8; }
+.spinner {
+  width: 36px; height: 36px; margin: 0 auto; border-radius: 50%;
+  border: 4px solid var(--pale-blue); border-top-color: var(--blue); animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.toast.action { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.toast.action button {
+  min-height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: var(--soft-blue); color: var(--navy);
+  font-weight: 700; font-size: 14px;
+}

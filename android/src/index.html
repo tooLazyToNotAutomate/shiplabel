@@ -9,13 +9,14 @@
   <link rel="stylesheet" href="ui/theme.css">
   <link rel="stylesheet" href="ui/layout.css">
   <link rel="stylesheet" href="ui/components.css">
+  <link rel="stylesheet" href="ui/home.css">
   <script src="shared/vendor/pdf-lib.min.js"></script>
   <script src="shared/vendor/pdf.min.js"></script>
   <script src="shared/vendor/jszip.min.js"></script>
 </head>
 <body>
   <div id="app">
-    <header class="appbar"><span aria-hidden="true">🏷️</span><h1 id="title">ShipLabel</h1></header>
+    <header class="appbar"><span class="appbar-logo" id="appbar-logo"></span><h1 id="title">ShipLabel</h1></header>
     <main id="page"></main>
     <nav class="bottom-nav" id="nav" aria-label="Main"></nav>
   </div>
@@ -28,8 +29,12 @@
   <script src="components/dom.js"></script>
   <script src="components/toast.js"></script>
   <script src="components/native.js"></script>
+  <script src="components/update-keys.js"></script>
+  <script src="components/updater.js"></script>
+  <script src="components/update-screens.js"></script>
   <script src="components/crop-editor.js"></script>
   <!-- android pages -->
+  <script src="pages/home.js"></script>
   <script src="pages/settings.js"></script>
   <script src="pages/history.js"></script>
   <script src="pages/process.js"></script>

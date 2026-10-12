@@ -18,3 +18,15 @@ android/native/app/build/
 android/native/.gradle/
 android/native/capacitor-cordova-android-plugins/
 !android/native/app/src/main/res/**/*.png
+
+# release secrets
+.ota-keys/
+keystore.properties
+*.jks
+*.keystore
+*.apk
+.env
+.env.*
+!android/native/app/debug.keystore
+
+android/native/keystore.properties

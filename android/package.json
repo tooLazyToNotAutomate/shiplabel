@@ -1,6 +1,6 @@
 {
   "name": "shiplabel-android",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "private": true,
   "description": "ShipLabel Studio Android app (Capacitor)",
   "scripts": {
@@ -8,15 +8,24 @@
     "sync": "npm run build && cap sync android",
     "open": "cap open android",
     "run": "npm run sync && cap run android",
-    "apk": "npm run sync && cd native && gradlew.bat assembleDebug"
+    "apk": "npm run sync && cd native && gradlew.bat assembleDebug",
+    "apk:release": "npm run sync && cd native && gradlew.bat assembleRelease",
+    "ota:keygen": "node ../scripts/ota-keygen.mjs",
+    "version:sync": "node ../scripts/sync-versions.mjs --apk",
+    "release:ota": "node ../scripts/release-ota.mjs",
+    "release:apk": "node ../scripts/release-apk.mjs",
+    "test:updater": "node ../scripts/test-updater.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.3",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/browser": "^8.0.5",
     "@capacitor/core": "^8.5.3",
     "@capacitor/filesystem": "^8.1.4",
     "@capacitor/share": "^8.0.3",
     "@capacitor/splash-screen": "^8.0.2",
-    "@capacitor/status-bar": "^8.0.4"
+    "@capacitor/status-bar": "^8.0.4",
+    "@capgo/capacitor-updater": "^8.52.1"
   },
   "devDependencies": {
     "@capacitor/cli": "^8.5.3"

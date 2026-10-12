@@ -23,6 +23,14 @@ Pages.settings = {
   title: "Settings",
   render(root) {
     const s = Settings.load();
+    const versionLine = h("p", { class: "muted" }, "Checking version...");
+    const checkUpdates = async () => {
+      const r = await Updater.forceCheck({ onApkRequired: url => UpdateScreens.apkRequired(url) });
+      if (r === "latest") Toast.ok("You have the latest version");
+      else if (r === "downloaded") { /* restart prompt is shown by the updater */ }
+      else if (r === "not_supported") Toast.show("Updates are only available in the installed app");
+      else if (r === "error") Toast.error("Could not check for updates. Check your connection.");
+    };
     const update = patch => { Object.assign(s, patch); Settings.save(s); Toast.ok("Saved"); };
     root.append(
       h("div", { class: "card stack" },
@@ -35,8 +43,14 @@ Pages.settings = {
       h("div", { class: "card stack" },
         h("h2", {}, "About"),
         h("p", { class: "muted" }, "ShipLabel Studio crops and formats marketplace shipping labels. Everything runs on this phone: PDFs are never uploaded anywhere."),
-        h("p", { class: "muted" }, "Version 1.0.0")
+        versionLine,
+        h("button", { class: "btn secondary", onclick: checkUpdates }, "Check for updates")
       )
     );
+    Updater.versions().then(v => {
+      versionLine.textContent = v.apk
+        ? `App version ${v.apk}` + (v.ota ? ` · update ${v.ota}` : "")
+        : "Version information is available in the installed app.";
+    });
   }
 };

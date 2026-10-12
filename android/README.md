@@ -9,10 +9,10 @@ Capacitor wrapper around the shared JS label engine, with a mobile-first UI of i
 android/
 ├── src/                 # Mobile web layer (what the WebView shows)
 │   ├── index.html
-│   ├── ui/              # theme.css (tokens), layout.css (app bar, bottom nav), components.css
+│   ├── ui/              # theme.css (tokens), layout.css (app bar, bottom nav), components.css, home.css
 │   ├── components/      # dom.js, toast.js, native.js (save/share), crop-editor.js (touch crop)
-│   ├── pages/           # process, templates, history, settings
-│   └── js/app.js        # bottom-nav router
+│   ├── pages/           # home (landing), process, templates, history, settings
+│   └── js/app.js        # bottom-nav router (opens on Home)
 ├── native/              # Generated Android Studio / Gradle project (Capacitor)
 ├── www/                 # Build output = src/ + ../shared/  (git-ignored)
 ├── capacitor.config.json
