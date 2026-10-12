@@ -38,7 +38,7 @@ class BatchProcessor:
                     items.append(BatchItem(input_path=src, filename=os.path.basename(src)))
                 elif src.lower().endswith(".zip"):
                     # Extract ZIP into temp folder
-                    temp_dir = tempfile.mkdtemp(prefix="shiplabel_zip_")
+                    temp_dir = tempfile.mkdtemp(prefix="trimlabel_zip_")
                     try:
                         with zipfile.ZipFile(src, 'r') as zip_ref:
                             zip_ref.extractall(temp_dir)
@@ -74,7 +74,7 @@ class BatchProcessor:
         """
         self.is_cancelled = False
         os.makedirs(output_dir, exist_ok=True)
-        temp_crop_dir = tempfile.mkdtemp(prefix="shiplabel_crop_")
+        temp_crop_dir = tempfile.mkdtemp(prefix="trimlabel_crop_")
 
         start_time = time.time()
         completed_count = 0
@@ -123,7 +123,7 @@ class BatchProcessor:
             return {"success": False, "message": "No files were successfully cropped.", "processed_count": 0}
 
         # Format and Export final output
-        final_output_path = os.path.join(output_dir, f"ShipLabel_Output_{int(time.time())}.pdf")
+        final_output_path = os.path.join(output_dir, f"TrimLabel_Output_{int(time.time())}.pdf")
 
         if output_mode.startswith("Thermal"):
             export_ok = OutputEngine.export_thermal(cropped_paths, final_output_path, label_size=output_mode)

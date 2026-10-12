@@ -1,5 +1,5 @@
 {
-  "name": "shiplabel-studio",
+  "name": "trimlabel-studio",
   "private": true,
   "scripts": {
     "build:web": "node scripts/build.js web",

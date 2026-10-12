@@ -4,7 +4,7 @@ from typing import Callable
 
 class Sidebar(ctk.CTkFrame):
     """
-    Left Navigation Sidebar for ShipLabel Studio.
+    Left Navigation Sidebar for TrimLabel Studio.
     Dark navy theme with active state highlighting.
     """
 
@@ -39,7 +39,7 @@ class Sidebar(ctk.CTkFrame):
 
         self.logo_text = ctk.CTkLabel(
             self.brand_frame,
-            text="ShipLabel",
+            text="TrimLabel",
             font=(theme.FONT_FAMILY, 18, "bold"),
             text_color=theme.COLOR_PRIMARY_TEXT
         )

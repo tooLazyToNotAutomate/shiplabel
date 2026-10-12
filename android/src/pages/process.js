@@ -44,7 +44,7 @@ Pages.process = {
           bytes = await PDFEngine.exportGrid(cropped, rows, cols, paper, cutMarks); ext = "pdf"; mime = "application/pdf";
         }
         HistoryLog.add({ marketplace: tmpl.marketplace, filesCount: files.length, mode });
-        await Native.saveAndShare(bytes, `ShipLabel_${part}_${files.length}_Labels.${ext}`, mime);
+        await Native.saveAndShare(bytes, `TrimLabel_${part}_${files.length}_Labels.${ext}`, mime);
         Toast.ok("Done");
       } catch (err) {
         if (err && /cancel/i.test(String(err.message || err))) return; // share sheet dismissed

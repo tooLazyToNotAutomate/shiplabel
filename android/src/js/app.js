@@ -3,7 +3,6 @@ const App = {
   tabs: [
     { id: "home", label: "Home", icon: "home" },
     { id: "process", label: "Process", icon: "printer" },
-    { id: "templates", label: "Templates", icon: "crop" },
     { id: "history", label: "History", icon: "clock" },
     { id: "settings", label: "Settings", icon: "settings" }
   ],

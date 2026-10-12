@@ -4,7 +4,7 @@ from typing import Callable, Optional
 
 class DashboardView(ctk.CTkFrame):
     """
-    Main Dashboard View for ShipLabel.
+    Main Dashboard View for TrimLabel.
     """
 
     def __init__(self, master, navigate_callback: Optional[Callable[[str], None]] = None, **kwargs):
@@ -35,7 +35,7 @@ class DashboardView(ctk.CTkFrame):
 
         welcome_text = ctk.CTkLabel(
             self.welcome_card,
-            text="Welcome to ShipLabel Studio",
+            text="Welcome to TrimLabel Studio",
             font=(theme.FONT_FAMILY, 16, "bold"),
             text_color=theme.COLOR_TEXT_PRIMARY
         )

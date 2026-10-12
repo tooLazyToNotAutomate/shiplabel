@@ -139,7 +139,7 @@ class TemplatesView(ctk.CTkFrame):
 
         # Create Toplevel Wizard Window
         dlg = ctk.CTkToplevel(self)
-        dlg.title("Learn New Template — ShipLabel")
+        dlg.title("Learn New Template — TrimLabel")
         dlg.geometry("960x700")
         dlg.grab_set()
         dlg.configure(fg_color=theme.COLOR_BG_MAIN)

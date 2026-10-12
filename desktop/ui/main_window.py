@@ -11,7 +11,7 @@ import ui.theme as theme
 
 class MainWindow(ctk.CTk):
     """
-    Main Application Window for ShipLabel Studio.
+    Main Application Window for TrimLabel Studio.
     Light commercial appearance mode with responsive view container.
     """
 
@@ -22,7 +22,7 @@ class MainWindow(ctk.CTk):
         ctk.set_appearance_mode("Light")
         ctk.set_default_color_theme("blue")
 
-        self.title("ShipLabel Studio — E-Commerce Shipping Label Manager")
+        self.title("TrimLabel Studio — E-Commerce Shipping Label Manager")
         self.geometry("1180x760")
         self.minsize(980, 640)
         self.configure(fg_color=theme.COLOR_BG_MAIN)

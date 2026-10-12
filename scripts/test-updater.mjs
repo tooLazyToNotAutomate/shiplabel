@@ -45,7 +45,7 @@ ok("garbage signature rejected", (await U.parseManifest({ payload: mk({}).payloa
 ok("bundle URL outside allow-list rejected", (await U.parseManifest(mk({ url: "https://evil.example/x.zip" }), pub)) === null);
 ok("bundle without sha256 rejected", (await U.parseManifest(mk({ checksum: "" }), pub)) === null);
 ok("APK link outside allow-list is dropped", (await U.parseManifest(mk({ apk_download_url: "https://evil.example/a.apk" }), pub)).apk_download_url === "");
-ok("APK link on our release host kept", (await U.parseManifest(mk({ apk_download_url: U.CFG.apkPrefix + "v2/ShipLabel.apk" }), pub)).apk_download_url.endsWith("ShipLabel.apk"));
+ok("APK link on our release host kept", (await U.parseManifest(mk({ apk_download_url: U.CFG.apkPrefix + "v2/TrimLabel.apk" }), pub)).apk_download_url.endsWith("TrimLabel.apk"));
 ok("non-semver version rejected", (await U.parseManifest(mk({ version: "1.0" }), pub)) === null);
 
 // 3. Decision matrix (from the template, adapted)

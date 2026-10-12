@@ -19,8 +19,8 @@ const UpdateScreens = {
       h("div", { class: "blocker-card" },
         icon("shield", "ico blocker-ico"),
         h("h2", {}, "Update required"),
-        h("p", {}, "A new version of ShipLabel is needed to keep working. Download it, then open the file to install."),
-        h("p", { class: "muted" }, "If Android asks, allow your browser to install apps from this source. Your templates and settings are kept."),
+        h("p", {}, "A new version of TrimLabel is needed to keep working. Download it, then open the file to install."),
+        h("p", { class: "muted" }, "If Android asks, allow your browser to install apps from this source. Your settings are kept."),
         h("button", { class: "btn", onclick: () => Updater.openApkDownload(url) }, "Download update")
       )));
   },

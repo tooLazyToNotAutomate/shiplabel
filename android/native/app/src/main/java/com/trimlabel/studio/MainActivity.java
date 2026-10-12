@@ -1,4 +1,4 @@
-package com.shiplabel.studio;
+package com.trimlabel.studio;
 
 import com.getcapacitor.BridgeActivity;
 

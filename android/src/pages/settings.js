@@ -1,6 +1,6 @@
 /** Settings page + persisted defaults (also read by the Process page). */
 const Settings = {
-  key: "shiplabel_m_settings",
+  key: "trimlabel_m_settings",
   defaults: { defaultMode: "A4 Sheet (4-up Grid)", paperSize: "A4", cutMarks: true },
 
   load() {
@@ -42,7 +42,10 @@ Pages.settings = {
       ),
       h("div", { class: "card stack" },
         h("h2", {}, "About"),
-        h("p", { class: "muted" }, "ShipLabel Studio crops and formats marketplace shipping labels. Everything runs on this phone: PDFs are never uploaded anywhere."),
+        h("p", { class: "muted" }, "TrimLabel Studio crops and formats marketplace shipping labels. Everything runs on this phone: PDFs are never uploaded anywhere."),
+        h("h3", {}, "Need a new label layout?"),
+        h("p", { class: "muted" }, "Using a courier or marketplace we don't support yet? Email a sample PDF (remove customer details first) and we'll try to add it."),
+        h("a", { class: "btn secondary", href: "mailto:swill8580@gmail.com?subject=TrimLabel%20template%20request" }, "Email swill8580@gmail.com"),
         versionLine,
         h("button", { class: "btn secondary", onclick: checkUpdates }, "Check for updates")
       )

@@ -1,10 +1,9 @@
 /** Home page: welcome hero, live stats, quick actions and recent activity. */
 Pages.home = {
-  title: "ShipLabel",
+  title: "TrimLabel",
   render(root) {
     const history = HistoryLog.load();
     const labels = history.reduce((n, e) => n + (Number(e.filesCount) || 0), 0);
-    const templates = window.templateManager.getAll().length;
 
     const stat = (value, label, delay) =>
       h("div", { class: "stat", style: `animation-delay:${delay}s` }, h("b", {}, value), h("span", {}, label));
@@ -25,14 +24,12 @@ Pages.home = {
 
       h("div", { class: "stats" },
         stat(labels, "Files processed", 0.05),
-        stat(history.length, "Sessions", 0.1),
-        stat(templates, "Templates", 0.15)
+        stat(history.length, "Sessions", 0.1)
       ),
 
       h("h3", { class: "section-title" }, "Quick actions"),
       h("div", { class: "tiles" },
         tile("process", "printer", "Process", "Crop and export PDFs", 0.1),
-        tile("templates", "crop", "Templates", "Learn custom crops", 0.15),
         tile("history", "clock", "History", "Past sessions", 0.2),
         tile("settings", "settings", "Settings", "Defaults and options", 0.25)
       ),

@@ -1,4 +1,4 @@
-# Releasing ShipLabel (Android)
+# Releasing TrimLabel (Android)
 
 Two update channels, one signed manifest.
 
@@ -19,7 +19,7 @@ Two update channels, one signed manifest.
 
 | Item | Location |
 |---|---|
-| APK releases `vN` (asset `ShipLabel.apk`) | `tooLazyToNotAutomate/shiplabel-apk` **and** `tooLazyToNotAutomate/shiplabel` |
+| APK releases `vN` (asset `TrimLabel.apk`) | `tooLazyToNotAutomate/shiplabel-apk` **and** `tooLazyToNotAutomate/trimlabel` |
 | OTA zips | `shiplabel-apk` prerelease tagged `ota` (never "Latest") |
 | Signed manifest | `shiplabel-apk/manifest.json` (`{payload, sig}`) |
 
@@ -30,12 +30,12 @@ Two update channels, one signed manifest.
    - private key: `.ota-keys/ota-private.pem` (gitignored). **Back it up offline.** If it is lost, installed apps can never accept another OTA; you would have to ship a new APK with a new public key.
    - public key: `android/src/components/update-keys.js` (compiled into the APK).
 3. Create the APK signing keystore (keep it forever; a different signature cannot update an installed app):
-   `keytool -genkeypair -v -keystore shiplabel-release.jks -alias shiplabel -keyalg RSA -keysize 4096 -validity 10000`
+   `keytool -genkeypair -v -keystore trimlabel-release.jks -alias trimlabel -keyalg RSA -keysize 4096 -validity 10000`
    Store the `.jks` outside the repo and back it up. Then create `android/native/keystore.properties` (gitignored):
    ```
-   storeFile=C:/path/to/shiplabel-release.jks
+   storeFile=C:/path/to/trimlabel-release.jks
    storePassword=...
-   keyAlias=shiplabel
+   keyAlias=trimlabel
    keyPassword=...
    ```
 4. Release the **first signed APK** (below). Phones need it once; OTA works from then on.

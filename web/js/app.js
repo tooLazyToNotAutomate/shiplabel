@@ -1,5 +1,5 @@
 /**
- * App: Controller for ShipLabel Web Studio.
+ * App: Controller for TrimLabel Web Studio.
  */
 
 // pdf.js hardening: no eval of font programs (CVE-2024-4367), same-origin worker only
@@ -13,8 +13,6 @@ class App {
     this.currentView = "dashboard";
     this.processFiles = [];
     this.batchFiles = [];
-    this.samplePdfBuffer = null;
-    this.cropCanvas = null;
 
     this.settings = {
       defaultPaper: "A4",
@@ -33,20 +31,18 @@ class App {
     this.loadHistory();
 
     this.bindNavigation();
-    this.bindTemplates();
     this.bindProcess();
     this.bindBatch();
     this.bindHistory();
     this.bindSettings();
 
-    this.renderTemplates();
     this.renderHistory();
   }
 
   // Settings Storage
   loadSettings() {
     try {
-      const stored = Security.storageGet("shiplabel_settings");
+      const stored = Security.storageGet("trimlabel_settings");
       if (stored) {
         const p = JSON.parse(stored) || {};
         this.settings = {
@@ -60,27 +56,28 @@ class App {
       console.error("Settings load error:", e);
     }
 
-    // Apply defaults to controls
-    const elPaper = document.getElementById("process-paper-size");
-    const elMode = document.getElementById("process-output-mode");
-    const elCut = document.getElementById("process-cut-marks");
-
-    if (elPaper) elPaper.value = this.settings.defaultPaper;
-    if (elMode) elMode.value = this.settings.defaultMode;
-    if (elCut) elCut.checked = this.settings.cutMarks;
-
-    const sPaper = document.getElementById("setting-default-paper");
-    const sMode = document.getElementById("setting-default-mode");
-    const sCut = document.getElementById("setting-cut-marks");
-    const sAuto = document.getElementById("setting-autodetect");
-
-    if (sPaper) sPaper.value = this.settings.defaultPaper;
-    if (sMode) sMode.value = this.settings.defaultMode;
-    if (sCut) sCut.checked = this.settings.cutMarks;
-    if (sAuto) sAuto.checked = this.settings.autoDetect;
+    this.applySettingsToControls();
   }
 
-  saveSettings() {
+  // Push the saved defaults into the Settings form, the Process form and the Batch form
+  applySettingsToControls() {
+    const set = (id, prop, value) => {
+      const el = document.getElementById(id);
+      if (el) el[prop] = value;
+    };
+    set("setting-default-paper", "value", this.settings.defaultPaper);
+    set("setting-default-mode", "value", this.settings.defaultMode);
+    set("setting-cut-marks", "checked", this.settings.cutMarks);
+    set("setting-autodetect", "checked", this.settings.autoDetect);
+
+    set("process-paper-size", "value", this.settings.defaultPaper);
+    set("process-output-mode", "value", this.settings.defaultMode);
+    set("process-cut-marks", "checked", this.settings.cutMarks);
+
+    set("batch-format-select", "value", this.settings.defaultMode);
+  }
+
+  saveSettings(silent = false) {
     this.settings.defaultPaper = document.getElementById("setting-default-paper").value;
     this.settings.defaultMode = document.getElementById("setting-default-mode").value;
     this.settings.cutMarks = document.getElementById("setting-cut-marks").checked;
@@ -88,14 +85,24 @@ class App {
 
     this.settings.defaultPaper = Security.pick(this.settings.defaultPaper, Security.PAPER_SIZES, "A4");
     this.settings.defaultMode = Security.pick(this.settings.defaultMode, Security.OUTPUT_MODES, "A4 Sheet (4-up Grid)");
-    const ok = Security.storageSet("shiplabel_settings", JSON.stringify(this.settings));
-    alert(ok ? "Settings saved successfully!" : "Could not save settings (browser storage unavailable).");
+    const ok = Security.storageSet("trimlabel_settings", JSON.stringify(this.settings));
+    this.applySettingsToControls();
+    if (!ok) alert("Could not save settings (browser storage unavailable).");
+    else if (!silent) this.showSettingsSaved();
+  }
+
+  showSettingsSaved() {
+    const note = document.getElementById("settings-saved-note");
+    if (!note) return;
+    note.textContent = "Saved. New defaults are applied to Process and Batch.";
+    clearTimeout(this._savedTimer);
+    this._savedTimer = setTimeout(() => (note.textContent = ""), 3000);
   }
 
   // History Storage
   loadHistory() {
     try {
-      const stored = Security.storageGet("shiplabel_history");
+      const stored = Security.storageGet("trimlabel_history");
       if (stored) {
         const parsed = JSON.parse(stored);
         this.history = Array.isArray(parsed)
@@ -114,14 +121,14 @@ class App {
     entry.timestamp = new Date().toLocaleString();
     this.history.unshift(entry);
     if (this.history.length > 50) this.history.pop(); // keep last 50
-    Security.storageSet("shiplabel_history", JSON.stringify(this.history));
+    Security.storageSet("trimlabel_history", JSON.stringify(this.history));
     this.renderHistory();
   }
 
   clearHistory() {
     if (confirm("Clear all processing history?")) {
       this.history = [];
-      Security.storageRemove("shiplabel_history");
+      Security.storageRemove("trimlabel_history");
       this.renderHistory();
     }
   }
@@ -215,9 +222,7 @@ class App {
       v.classList.toggle("active", v.id === `view-${viewName}`);
     });
 
-    if (viewName === "templates") {
-      this.renderTemplates();
-    } else if (viewName === "process") {
+    if (viewName === "process") {
       this.populateTemplateDropdown("process-template-select");
     } else if (viewName === "batch") {
       this.populateTemplateDropdown("batch-template-select");
@@ -349,220 +354,6 @@ class App {
     box.appendChild(list);
   }
 
-  // Templates
-  bindTemplates() {
-    const btnCreate = document.getElementById("btn-create-template");
-    const modal = document.getElementById("template-modal");
-    const btnClose = document.getElementById("btn-close-modal");
-    const btnCancel = document.getElementById("btn-cancel-modal");
-    const btnSave = document.getElementById("btn-save-template");
-
-    const btnExport = document.getElementById("btn-export-templates");
-    const btnImport = document.getElementById("btn-import-templates");
-    const fileImport = document.getElementById("import-templates-file");
-
-    // Hidden file input for sample PDF selection
-    const sampleInput = document.createElement("input");
-    sampleInput.type = "file";
-    sampleInput.accept = ".pdf";
-    sampleInput.style.display = "none";
-    document.body.appendChild(sampleInput);
-
-    btnCreate.addEventListener("click", () => sampleInput.click());
-
-    sampleInput.addEventListener("change", async (e) => {
-      if (e.target.files.length === 0) return;
-      const { valid, errors } = await Security.validatePdfFiles([e.target.files[0]]);
-      e.target.value = "";
-      if (valid.length === 0) {
-        alert("Invalid file: " + errors.join("\n"));
-        return;
-      }
-      const buffer = await valid[0].arrayBuffer();
-      this.samplePdfBuffer = buffer;
-
-      await this.loadSamplePdfToCanvas(buffer);
-      modal.classList.add("active");
-    });
-
-    const closeModal = () => modal.classList.remove("active");
-    btnClose.addEventListener("click", closeModal);
-    btnCancel.addEventListener("click", closeModal);
-
-    btnSave.addEventListener("click", () => {
-      const name = document.getElementById("modal-tmpl-name").value.trim();
-      const mp = Security.pick(document.getElementById("modal-tmpl-mp").value, Security.MARKETPLACES, "Custom");
-      const size = Security.pick(document.getElementById("modal-tmpl-size").value, Security.LABEL_SIZES, "3x5");
-
-      if (!name) {
-        alert("Please enter a Template Name.");
-        return;
-      }
-
-      const cropRect = this.cropCanvas.getCropRect();
-      const saved = window.templateManager.addTemplate(name, mp, cropRect, size);
-      if (!saved) {
-        alert("Could not save template: invalid crop area or template limit reached.");
-        return;
-      }
-      closeModal();
-      this.renderTemplates();
-      alert(`Template '${saved.name}' saved successfully!`);
-    });
-
-    // Modal Crop Presets
-    document.getElementById("preset-flipkart")?.addEventListener("click", () => {
-      if (this.cropCanvas) this.cropCanvas.setCropRect({ x0: 0.305, y0: 0.034, x1: 0.695, y1: 0.452 });
-    });
-
-    document.getElementById("preset-top-half")?.addEventListener("click", () => {
-      if (this.cropCanvas) this.cropCanvas.setCropRect({ x0: 0.02, y0: 0.02, x1: 0.98, y1: 0.48 });
-    });
-
-    document.getElementById("preset-reset")?.addEventListener("click", () => {
-      if (this.cropCanvas) this.cropCanvas.setCropRect({ x0: 0, y0: 0, x1: 1, y1: 1 });
-    });
-
-    // Export / Import Templates JSON
-    btnExport?.addEventListener("click", () => {
-      const templates = window.templateManager.getAll();
-      const jsonStr = JSON.stringify(templates, null, 2);
-      const blob = new Blob([jsonStr], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "shiplabel_templates.json";
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-
-    btnImport?.addEventListener("click", () => fileImport.click());
-
-    fileImport?.addEventListener("change", async (e) => {
-      if (e.target.files.length === 0) return;
-      try {
-        const file = e.target.files[0];
-        e.target.value = "";
-        if (file.size > Security.MAX_IMPORT_BYTES) {
-          alert("Import file too large (max 1 MB).");
-          return;
-        }
-        const imported = JSON.parse(await file.text());
-        if (!Array.isArray(imported)) throw new Error("not an array");
-
-        let added = 0;
-        imported.slice(0, Security.MAX_TEMPLATES).forEach(t => {
-          if (t && window.templateManager.addTemplate(t.name, t.marketplace, t.cropRect, t.labelSize)) added++;
-        });
-        this.renderTemplates();
-        alert(`Imported ${added} of ${imported.length} templates (invalid entries were skipped).`);
-      } catch (err) {
-        alert("Failed to import templates: Invalid JSON format.");
-      }
-    });
-  }
-
-  async loadSamplePdfToCanvas(arrayBuffer) {
-    const canvasEl = document.getElementById("crop-canvas");
-    const infoEl = document.getElementById("crop-dimensions-info");
-
-    const updateInfo = (rect) => {
-      if (!infoEl) return;
-      const wPct = Math.round((rect.x1 - rect.x0) * 100);
-      const hPct = Math.round((rect.y1 - rect.y0) * 100);
-      infoEl.textContent = `Crop: ${wPct}% width × ${hPct}% height`;
-    };
-
-    if (!this.cropCanvas) {
-      this.cropCanvas = new CropCanvas(canvasEl, updateInfo);
-    }
-
-    try {
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer, ...PDFJS_SAFE_OPTS }).promise;
-      const page = await pdf.getPage(1);
-      const viewport = page.getViewport({ scale: 1.5 });
-
-      canvasEl.width = viewport.width;
-      canvasEl.height = viewport.height;
-
-      const tempCanvas = document.createElement("canvas");
-      tempCanvas.width = viewport.width;
-      tempCanvas.height = viewport.height;
-      const tempCtx = tempCanvas.getContext("2d");
-
-      await page.render({ canvasContext: tempCtx, viewport }).promise;
-
-      const img = new Image();
-      img.src = tempCanvas.toDataURL();
-      img.onload = () => {
-        this.cropCanvas.setImage(img);
-        // Default crop: Flipkart 3x5 preset
-        this.cropCanvas.setCropRect({ x0: 0.305, y0: 0.034, x1: 0.695, y1: 0.452 });
-        updateInfo({ x0: 0.305, y0: 0.034, x1: 0.695, y1: 0.452 });
-      };
-    } catch (e) {
-      console.error("Error rendering PDF to canvas:", e);
-      alert("Failed to render PDF page. Make sure it's a valid PDF file.");
-    }
-  }
-
-  renderTemplates() {
-    const container = document.getElementById("template-list-container");
-    container.textContent = "";
-    const templates = window.templateManager.getAll();
-
-    if (templates.length === 0) {
-      const empty = document.createElement("div");
-      empty.className = "empty-state";
-      empty.textContent = "No templates created yet. Click 'Create New Template' to learn a crop area.";
-      container.appendChild(empty);
-      return;
-    }
-
-    templates.forEach(t => {
-      const card = document.createElement("div");
-      card.className = "tmpl-card";
-
-      const rect = t.cropRect;
-      const cropStr = `X: ${(rect.x0*100).toFixed(0)}%..${(rect.x1*100).toFixed(0)}%, Y: ${(rect.y0*100).toFixed(0)}%..${(rect.y1*100).toFixed(0)}%`;
-
-      const top = document.createElement("div");
-      const header = document.createElement("div");
-      header.className = "tmpl-header";
-      const nameEl = document.createElement("span");
-      nameEl.className = "tmpl-name";
-      nameEl.innerHTML = '<svg class="icon"><use href="#i-crop"/></svg>';
-      nameEl.appendChild(document.createTextNode(t.name));
-      const badge = document.createElement("span");
-      badge.className = "badge";
-      badge.textContent = t.marketplace;
-      header.append(nameEl, badge);
-      const details = document.createElement("div");
-      details.className = "tmpl-details";
-      details.textContent = `Size: ${t.labelSize} • Crop: ${cropStr}`;
-      top.append(header, details);
-
-      const actions = document.createElement("div");
-      actions.className = "tmpl-actions";
-      const del = document.createElement("button");
-      del.className = "btn btn-danger btn-sm";
-      del.innerHTML = '<svg class="icon icon-sm"><use href="#i-trash"/></svg>';
-      del.appendChild(document.createTextNode("Delete"));
-      del.addEventListener("click", () => this.deleteTemplate(t.id));
-      actions.appendChild(del);
-
-      card.append(top, actions);
-      container.appendChild(card);
-    });
-  }
-
-  deleteTemplate(id) {
-    if (confirm("Are you sure you want to delete this template?")) {
-      window.templateManager.deleteTemplate(id);
-      this.renderTemplates();
-    }
-  }
-
   populateTemplateDropdown(selectId) {
     const select = document.getElementById(selectId);
     select.innerHTML = "";
@@ -644,7 +435,7 @@ class App {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `ShipLabel_${Security.safeFilePart(tmpl.marketplace)}_${this.processFiles.length}_Labels.${fileExt}`;
+        a.download = `TrimLabel_${Security.safeFilePart(tmpl.marketplace)}_${this.processFiles.length}_Labels.${fileExt}`;
         a.click();
         URL.revokeObjectURL(url);
 
@@ -729,7 +520,7 @@ class App {
           } else if (format.includes("2-up")) {
             rows = 2; cols = 1;
           }
-          resultBytes = await PDFEngine.exportGrid(croppedBuffers, rows, cols, "A4", true);
+          resultBytes = await PDFEngine.exportGrid(croppedBuffers, rows, cols, this.settings.defaultPaper, this.settings.cutMarks);
           fileExt = "pdf";
           mimeType = "application/pdf";
         }
@@ -738,7 +529,7 @@ class App {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `ShipLabel_Batch_${Security.safeFilePart(tmpl.marketplace)}_${total}_Labels.${fileExt}`;
+        a.download = `TrimLabel_Batch_${Security.safeFilePart(tmpl.marketplace)}_${total}_Labels.${fileExt}`;
         a.click();
         URL.revokeObjectURL(url);
 
@@ -772,6 +563,10 @@ class App {
   bindSettings() {
     document.getElementById("btn-save-settings")?.addEventListener("click", () => {
       this.saveSettings();
+    });
+    // Save as soon as an option changes, so ticking/unticking never needs the button
+    ["setting-default-paper", "setting-default-mode", "setting-cut-marks", "setting-autodetect"].forEach(id => {
+      document.getElementById(id)?.addEventListener("change", () => this.saveSettings());
     });
   }
 }

@@ -51,7 +51,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
 def main():
     with http.server.ThreadingHTTPServer((HOST, PORT), Handler) as httpd:
-        print(f"ShipLabel Web Studio running at: http://localhost:{PORT}")
+        print(f"TrimLabel Web Studio running at: http://localhost:{PORT}")
         webbrowser.open(f"http://localhost:{PORT}")
         try:
             httpd.serve_forever()

@@ -11,8 +11,8 @@ export const GRADLE = join(ANDROID, "native", "app", "build.gradle");
 // ---- Release targets (change here only) ------------------------------------
 export const OWNER = "tooLazyToNotAutomate";
 export const RELEASES_REPO = `${OWNER}/shiplabel-apk`; // APKs, OTA zips and manifest.json
-export const SOURCE_REPO = `${OWNER}/shiplabel`;       // also receives the vN release
-export const APK_FILENAME = "ShipLabel.apk";           // identical on every release
+export const SOURCE_REPO = `${OWNER}/trimlabel`;       // also receives the vN release
+export const APK_FILENAME = "TrimLabel.apk";           // identical on every release
 export const OTA_TAG = "ota";                          // rolling prerelease that hosts OTA zips
 export const MANIFEST_PATH = "manifest.json";
 export const KEY_FILE = process.env.OTA_PRIVATE_KEY_FILE || join(ROOT, ".ota-keys", "ota-private.pem");

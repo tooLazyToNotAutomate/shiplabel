@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">ShipLabel Studio</string>
-    <string name="title_activity_main">ShipLabel Studio</string>
-    <string name="package_name">com.shiplabel.studio</string>
-    <string name="custom_url_scheme">com.shiplabel.studio</string>
+    <string name="app_name">TrimLabel Studio</string>
+    <string name="title_activity_main">TrimLabel Studio</string>
+    <string name="package_name">com.trimlabel.studio</string>
+    <string name="custom_url_scheme">com.trimlabel.studio</string>
 </resources>

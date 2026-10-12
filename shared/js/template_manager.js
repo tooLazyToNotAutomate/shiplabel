@@ -55,7 +55,7 @@ const DEFAULT_TEMPLATES = [
 
 class TemplateManager {
   constructor() {
-    this.storageKey = "shiplabel_templates_v3"; // v3: tightened Flipkart x-crop to remove blank side margins
+    this.storageKey = "trimlabel_templates_v3"; // v3: tightened Flipkart x-crop to remove blank side margins
     this.templates = [];
     this.init();
   }

@@ -1,6 +1,6 @@
 {
-  "appId": "com.shiplabel.studio",
-  "appName": "ShipLabel Studio",
+  "appId": "com.trimlabel.studio",
+  "appName": "TrimLabel Studio",
   "webDir": "www",
   "android": {
     "path": "native",

@@ -33,7 +33,7 @@ for (const repo of [RELEASES_REPO, SOURCE_REPO]) {
   if (exists) fail(`Release ${tag} already exists in ${repo}. Bump to the next major.`);
 }
 for (const repo of [RELEASES_REPO, SOURCE_REPO]) {
-  gh(["release", "create", tag, apk, "-R", repo, "--title", `ShipLabel ${tag}`, "--notes", process.env.RELEASE_NOTES || `ShipLabel ${versionName}`]);
+  gh(["release", "create", tag, apk, "-R", repo, "--title", `TrimLabel ${tag}`, "--notes", process.env.RELEASE_NOTES || `TrimLabel ${versionName}`]);
 }
 
 const url = `https://github.com/${RELEASES_REPO}/releases/download/${tag}/${APK_FILENAME}`;
@@ -45,7 +45,7 @@ if (!head.ok) fail(`Download URL returned ${head.status}: ${url}. Manifest NOT u
 const prevMin = readPublishedManifest().payload?.min_apk_version || "";
 publishManifest(buildEnvelope({
   version: versionName, url: "", checksum: "", critical: false,
-  releaseNotes: (process.env.RELEASE_NOTES || `ShipLabel ${versionName}`).slice(0, 500),
+  releaseNotes: (process.env.RELEASE_NOTES || `TrimLabel ${versionName}`).slice(0, 500),
   releasedAt: new Date().toISOString(),
   min_apk_version: process.env.RECOMMENDED_ONLY === "1" ? prevMin : versionName,
   apk_download_url: url,

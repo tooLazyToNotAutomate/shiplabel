@@ -20,7 +20,7 @@ body {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
   height: calc(var(--nav-h) + var(--safe-bottom)); padding-bottom: var(--safe-bottom);
   background: var(--card); border-top: 1px solid var(--border);
-  display: grid; grid-template-columns: repeat(5, 1fr);
+  display: grid; grid-template-columns: repeat(4, 1fr);
 }
 .bottom-nav button {
   background: none; border: 0; color: var(--text-muted); font: inherit; font-size: 12px;

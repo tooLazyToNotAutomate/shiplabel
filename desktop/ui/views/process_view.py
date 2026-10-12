@@ -247,7 +247,7 @@ class ProcessView(ctk.CTkFrame):
                 messagebox.showwarning("No PDFs Found", "No PDF files found in selection.")
                 return
 
-            temp_dir = tempfile.mkdtemp(prefix="shiplabel_proc_")
+            temp_dir = tempfile.mkdtemp(prefix="trimlabel_proc_")
             for idx, pdf_path in enumerate(pdf_paths):
                 out_crop = os.path.join(temp_dir, f"cropped_{idx}.pdf")
                 ok = PDFEngine.crop_pdf(pdf_path, out_crop, matched_tmpl.crop_rect)
@@ -258,7 +258,7 @@ class ProcessView(ctk.CTkFrame):
                 messagebox.showerror("Error", "Failed to crop input files.")
                 return
 
-            final_pdf_path = os.path.join(output_dir, f"ShipLabel_{matched_tmpl.marketplace}_{len(temp_cropped_files)}_Labels.pdf")
+            final_pdf_path = os.path.join(output_dir, f"TrimLabel_{matched_tmpl.marketplace}_{len(temp_cropped_files)}_Labels.pdf")
 
             if mode.startswith("Thermal"):
                 success = OutputEngine.export_thermal(temp_cropped_files, final_pdf_path, label_size=mode)

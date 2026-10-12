@@ -1,5 +1,5 @@
 """
-ShipLabel UI Theme - Navy & Blue palette (matches styles.css design tokens).
+TrimLabel UI Theme - Navy & Blue palette (matches styles.css design tokens).
 Dark navy sidebar, white cards on a pale-blue canvas, vivid blue accents.
 """
 

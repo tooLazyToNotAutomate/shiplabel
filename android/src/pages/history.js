@@ -1,4 +1,4 @@
-const HISTORY_KEY = "shiplabel_history";
+const HISTORY_KEY = "trimlabel_history";
 
 const HistoryLog = {
   load() {
