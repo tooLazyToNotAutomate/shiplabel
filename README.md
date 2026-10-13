@@ -113,6 +113,14 @@ Customer addresses and phone numbers are sensitive PII (Personally Identifiable 
 
 ---
 
+## Brand and legal
+
+- **Logo:** the monogram T inside crop-mark corners (soft blue corners, white T on `#3965FA`). Sources: `web/favicon.svg`, the `i-logo` symbol in `web/index.html`, and `logoIcon()` in `android/src/components/dom.js`. Android launcher icons and splash screens in `android/native/app/src/main/res/` use the same mark.
+- **Legal pages** live in `shared/legal/` and ship with both the website and the Android app: `privacy.html`, `terms.html`, `disclaimer.html`, `notices.html` (third-party licences). On the web they are linked from the footer and are also served at `/privacy`, `/terms`, `/disclaimer` and `/notices`; in the Android app they are linked from Settings.
+- Fill in the highlighted `[OPERATOR NAME]`, `[ADDRESS...]` and `[CITY, STATE]` placeholders before launch, and have a lawyer review the documents.
+
+---
+
 ## Design System
 
 The Web Studio (`web/styles.css`) and the Android app (`android/src/ui/theme.css`) share the same navy & blue palette.

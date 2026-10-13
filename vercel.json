@@ -1,6 +1,12 @@
 {
   "framework": null,
   "cleanUrls": true,
+  "rewrites": [
+    { "source": "/privacy", "destination": "/shared/legal/privacy.html" },
+    { "source": "/terms", "destination": "/shared/legal/terms.html" },
+    { "source": "/disclaimer", "destination": "/shared/legal/disclaimer.html" },
+    { "source": "/notices", "destination": "/shared/legal/notices.html" }
+  ],
   "buildCommand": "node scripts/build.js web",
   "outputDirectory": "dist/web",
   "headers": [

@@ -46,6 +46,13 @@ Pages.settings = {
         h("a", { class: "btn secondary", href: "mailto:swill8580@gmail.com?subject=TrimLabel%20template%20request" }, "Email swill8580@gmail.com"),
         versionLine,
         h("button", { class: "btn secondary", onclick: checkUpdates }, "Check for updates")
+      ),
+      h("div", { class: "card stack", id: "settings-legal" },
+        h("h2", {}, "Legal"),
+        h("a", { class: "btn secondary", id: "legal-privacy", href: "shared/legal/privacy.html" }, "Privacy Policy"),
+        h("a", { class: "btn secondary", id: "legal-terms", href: "shared/legal/terms.html" }, "Terms of Use"),
+        h("a", { class: "btn secondary", id: "legal-disclaimer", href: "shared/legal/disclaimer.html" }, "Disclaimer"),
+        h("a", { class: "btn secondary", id: "legal-notices", href: "shared/legal/notices.html" }, "Third-party notices")
       )
     );
     Updater.versions().then(v => {

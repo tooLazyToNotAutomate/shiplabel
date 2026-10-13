@@ -45,6 +45,27 @@ function icon(name, cls = "ico") {
   return svg;
 }
 
+
+/** TrimLabel monogram-T logo (white T + soft-blue crop corners). */
+function logoIcon(cls = "ico logo") {
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", "0 0 64 64");
+  svg.setAttribute("class", cls);
+  svg.setAttribute("aria-hidden", "true");
+  const mk = (d, stroke, w) => {
+    const p = document.createElementNS(NS, "path");
+    p.setAttribute("d", d);
+    p.setAttribute("stroke", stroke);
+    p.setAttribute("stroke-width", w);
+    svg.append(p);
+  };
+  mk("M12 22V13a1 1 0 0 1 1-1h9M42 12h9a1 1 0 0 1 1 1v9M52 42v9a1 1 0 0 1-1 1h-9M22 52h-9a1 1 0 0 1-1-1v-9", "#99B7FC", "4.5");
+  mk("M22 23h20M32 23v19", "#ffffff", "6");
+  return svg;
+}
+
+window.logoIcon = logoIcon;
 window.h = h;
 window.icon = icon;
 window.selectField = selectField;

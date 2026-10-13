@@ -1626,3 +1626,6 @@ canvas {
 .hero-free .hf-pills { display: flex; flex-wrap: wrap; gap: 6px; font-size: inherit; }
 .hero-free .hf-pills em { font-style: normal; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 999px; background: #fff; color: #2142b8; }
 @media (max-width: 900px) { .hero-free { align-items: flex-start; padding: 16px; } .hero-free .hf-ico { width: 44px; height: 44px; } .hero-free .hf-text b { font-size: 17px; } }
+
+/* Logo mark sits at 62% of its box, so draw it larger than a plain icon */
+.brand-icon .icon { width: 28px; height: 28px; }

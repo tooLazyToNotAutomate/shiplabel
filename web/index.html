@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#1b1b39">
   <title>TrimLabel Studio — E-Commerce Shipping Label Manager</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="stylesheet" href="styles.css">
 
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
@@ -19,6 +21,7 @@
 
   <!-- Icon sprite (inline, CSP-safe) -->
   <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-logo" viewBox="0 0 64 64"><path d="M12 22V13a1 1 0 0 1 1-1h9M42 12h9a1 1 0 0 1 1 1v9M52 42v9a1 1 0 0 1-1 1h-9M22 52h-9a1 1 0 0 1-1-1v-9" stroke="#99B7FC" stroke-width="4.5"/><path d="M22 23h20M32 23v19" stroke="currentColor" stroke-width="6"/></symbol>
     <symbol id="i-tag" viewBox="0 0 24 24"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"/><circle cx="7.5" cy="7.5" r="1.3"/></symbol>
     <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></symbol>
     <symbol id="i-crop" viewBox="0 0 24 24"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></symbol>
@@ -54,7 +57,7 @@
   <!-- Mobile Header -->
   <header id="mobile-header" class="mobile-header">
     <div class="brand">
-      <span class="brand-icon"><svg class="icon"><use href="#i-tag"/></svg></span>
+      <span class="brand-icon"><svg class="icon"><use href="#i-logo"/></svg></span>
       <span class="brand-title">TrimLabel</span>
     </div>
     <button type="button" id="mobile-menu-btn" class="btn menu-btn" aria-label="Open navigation menu"><svg class="icon"><use href="#i-menu"/></svg></button>
@@ -66,7 +69,7 @@
   <aside id="sidebar" aria-label="Main navigation">
     <div class="sidebar-header">
       <div class="brand">
-        <span class="brand-icon"><svg class="icon"><use href="#i-tag"/></svg></span>
+        <span class="brand-icon"><svg class="icon"><use href="#i-logo"/></svg></span>
         <span class="brand-title">TrimLabel</span>
       </div>
       <button type="button" id="sidebar-close-btn" class="btn sidebar-close mobile-only" aria-label="Close navigation menu"><svg class="icon"><use href="#i-x"/></svg></button>
@@ -280,7 +283,7 @@
       <div style="display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between">
         <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:14px;max-width:320px">
           <div style="display:flex;align-items:center;gap:12px">
-            <span style="width:36px;height:36px;border-radius:10px;background:#3965FA;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"/><path d="M7.5 7.5h.01"/></svg></span>
+            <span style="width:36px;height:36px;border-radius:10px;background:#3965FA;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22V13a1 1 0 0 1 1-1h9M42 12h9a1 1 0 0 1 1 1v9M52 42v9a1 1 0 0 1-1 1h-9M22 52h-9a1 1 0 0 1-1-1v-9" stroke="#99B7FC" stroke-width="4.5"/><path d="M22 23h20M32 23v19" stroke="#fff" stroke-width="6"/></svg></span>
             <span style="font-size:19px;font-weight:800;color:#fff;letter-spacing:-0.3px">TrimLabel</span>
           </div>
           <span style="font-size:15px;line-height:1.55">Print-ready shipping labels, made simple.</span>
@@ -299,7 +302,10 @@
           </div>
           <div style="display:flex;flex-direction:column;gap:12px">
             <span style="font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#99B7FC">Legal</span>
-            <a href="#" data-goto="about" style="font-size:15px;font-weight:600;color:#fff">Privacy</a>
+            <a href="shared/legal/privacy.html" id="footer-privacy" style="font-size:15px;font-weight:600;color:#fff">Privacy Policy</a>
+            <a href="shared/legal/terms.html" id="footer-terms" style="font-size:15px;font-weight:600;color:#fff">Terms of Use</a>
+            <a href="shared/legal/disclaimer.html" id="footer-disclaimer" style="font-size:15px;font-weight:600;color:#fff">Disclaimer</a>
+            <a href="shared/legal/notices.html" id="footer-notices" style="font-size:15px;font-weight:600;color:#fff">Third-party notices</a>
           </div>
         </div>
       </div>

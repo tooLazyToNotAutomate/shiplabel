@@ -33,3 +33,6 @@ android/native/keystore.properties
 
 # archived features kept for the future (local only)
 upcoming-features/
+
+# web icons must be tracked
+!web/apple-touch-icon.png

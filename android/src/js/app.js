@@ -19,7 +19,7 @@ const App = {
     for (const t of App.tabs) {
       nav.append(h("button", { "data-tab": t.id, onclick: () => App.show(t.id) }, icon(t.icon), t.label));
     }
-    document.getElementById("appbar-logo").append(icon("tag"));
+    document.getElementById("appbar-logo").append(logoIcon());
     App.show("home");
     App.setupNative();
     App.setupUpdates();

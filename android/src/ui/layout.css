@@ -31,3 +31,4 @@ body {
 .appbar-logo { width: 32px; height: 32px; border-radius: 9px; background: var(--blue); display: grid; place-items: center; }
 .appbar-logo .ico { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .bottom-nav button.active { color: var(--blue); font-weight: 600; }
+.appbar-logo .logo { width: 28px; height: 28px; }
