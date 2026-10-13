@@ -14,7 +14,6 @@ class App {
     this.processFiles = [];
 
     this.settings = {
-      defaultPaper: "A4",
       defaultMode: "A4 Sheet (4-up Grid)",
       cutMarks: true,
       autoDetect: true
@@ -44,7 +43,6 @@ class App {
       if (stored) {
         const p = JSON.parse(stored) || {};
         this.settings = {
-          defaultPaper: Security.pick(p.defaultPaper, Security.PAPER_SIZES, this.settings.defaultPaper),
           defaultMode: Security.pick(p.defaultMode, Security.OUTPUT_MODES, this.settings.defaultMode),
           cutMarks: typeof p.cutMarks === "boolean" ? p.cutMarks : this.settings.cutMarks,
           autoDetect: typeof p.autoDetect === "boolean" ? p.autoDetect : this.settings.autoDetect
@@ -63,13 +61,11 @@ class App {
       const el = document.getElementById(id);
       if (el) el[prop] = value;
     };
-    set("setting-default-paper", "value", this.settings.defaultPaper);
     set("setting-default-mode", "value", this.settings.defaultMode);
     set("setting-cut-marks", "checked", this.settings.cutMarks);
     set("setting-autodetect", "checked", this.settings.autoDetect);
 
     set("process-cut-marks", "checked", this.settings.cutMarks);
-    this.setRadio("process-paper", this.settings.defaultPaper);
     this.setRadio("process-layout", this.settings.defaultMode);
   }
 
@@ -83,12 +79,10 @@ class App {
   }
 
   saveSettings(silent = false) {
-    this.settings.defaultPaper = document.getElementById("setting-default-paper").value;
     this.settings.defaultMode = document.getElementById("setting-default-mode").value;
     this.settings.cutMarks = document.getElementById("setting-cut-marks").checked;
     this.settings.autoDetect = document.getElementById("setting-autodetect").checked;
 
-    this.settings.defaultPaper = Security.pick(this.settings.defaultPaper, Security.PAPER_SIZES, "A4");
     this.settings.defaultMode = Security.pick(this.settings.defaultMode, Security.OUTPUT_MODES, "A4 Sheet (4-up Grid)");
     const ok = Security.storageSet("trimlabel_settings", JSON.stringify(this.settings));
     this.applySettingsToControls();
@@ -395,7 +389,7 @@ class App {
       }
     });
 
-    document.querySelectorAll('input[name="process-layout"], input[name="process-paper"]').forEach(r => {
+    document.querySelectorAll('input[name="process-layout"]').forEach(r => {
       r.addEventListener("change", () => this.updateProcessSummary());
     });
     this.renderProcessFiles();
@@ -415,7 +409,6 @@ class App {
       }
 
       const mode = Security.pick(this.getRadio("process-layout", this.settings.defaultMode), Security.OUTPUT_MODES, "A4 Sheet (4-up Grid)");
-      const paperSize = Security.pick(this.getRadio("process-paper", "A4"), Security.PAPER_SIZES, "A4");
       const cutMarks = document.getElementById("process-cut-marks").checked;
       const total = this.processFiles.length;
 
@@ -447,7 +440,7 @@ class App {
           } else if (mode.includes("2-up")) {
             rows = 2; cols = 1;
           }
-          resultBytes = await PDFEngine.exportGrid(croppedBuffers, rows, cols, paperSize, cutMarks);
+          resultBytes = await PDFEngine.exportGrid(croppedBuffers, rows, cols, "A4", cutMarks);
           fileExt = "pdf";
           mimeType = "application/pdf";
         }
@@ -535,7 +528,7 @@ class App {
       const per = mode.includes("6-up") ? 6 : mode.includes("2-up") ? 2 : 4;
       out = Math.ceil(labels / per);
       unit = out === 1 ? "sheet" : "sheets";
-      unit = `${this.getRadio("process-paper", "A4")} ${unit}`;
+      unit = `A4 ${unit}`;
     }
     labelsEl.textContent = labels;
     document.getElementById("sum-out").textContent = out;
@@ -555,7 +548,7 @@ class App {
       this.saveSettings();
     });
     // Save as soon as an option changes, so ticking/unticking never needs the button
-    ["setting-default-paper", "setting-default-mode", "setting-cut-marks", "setting-autodetect"].forEach(id => {
+    ["setting-default-mode", "setting-cut-marks", "setting-autodetect"].forEach(id => {
       document.getElementById(id)?.addEventListener("change", () => this.saveSettings());
     });
   }

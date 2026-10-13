@@ -41,6 +41,13 @@
     <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></symbol>
     <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3Z"/></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+    <symbol id="i-user-off" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.6-3.6 3.4-5.6 7-5.6s6.4 2 7 5.6"/><path d="M3.5 3.5l17 17"/></symbol>
+    <symbol id="i-heart"viewBox="0 0 24 24"><path d="M12 20.5s-8-4.7-8-10.6A4.4 4.4 0 0 1 12 7a4.4 4.4 0 0 1 8 2.9c0 5.9-8 10.6-8 10.6Z"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 4v16M7 20h10M5 8h14"/><path d="m5 8-3 7a3 3 0 0 0 6 0L5 8ZM19 8l-3 7a3 3 0 0 0 6 0l-3-7Z"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11 12 3l9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><path d="M4 9 5.5 4h13L20 9"/><path d="M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0A2.7 2.7 0 0 0 20 9"/><path d="M5 12v8h14v-8M10 20v-5h4v5"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
   </svg>
 
@@ -74,7 +81,10 @@
       <li><button type="button" id="nav-about" class="nav-item" data-view="about"><svg class="icon"><use href="#i-info"/></svg>About</button></li>
     </ul>
 
-    <div class="sidebar-footer"><svg class="icon" style="vertical-align:-4px;margin-right:8px"><use href="#i-shield"/></svg>Your files never leave this device</div>
+    <div class="sidebar-footer" id="sidebar-free">
+      <span class="sf-ico"><svg class="icon"><use href="#i-heart"/></svg></span>
+      <span class="sf-text"><b>Free for everyone</b><span>No sign-up, ever</span></span>
+    </div>
   </aside>
 
   <!-- Main Content View Container -->
@@ -88,13 +98,20 @@
       <div style="position:relative;flex:1 1 380px;display:flex;flex-direction:column;gap:26px;min-width:0">
         <div style="align-self:flex-start;display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:rgba(153,183,252,0.16);color:#99B7FC;font-size:13px;font-weight:700">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>
-          Free · Private · Works offline
+          Free for everyone
         </div>
         <h1 class="m-h1" style="margin:0;font-size:56px;line-height:1.04;font-weight:800;letter-spacing:-1.6px">Shipping labels,<br>print-ready in seconds.</h1>
         <p style="margin:0;font-size:19px;line-height:1.5;color:#D6DEF8;max-width:460px">Drop your marketplace PDFs. We trim, arrange and format them for your printer.</p>
+        <div class="hero-free" id="hero-free">
+          <div class="hf-ico"><svg class="icon"><use href="#i-user-off"/></svg></div>
+          <div class="hf-text">
+            <b>No account needed. Just open and print.</b>
+            <span class="hf-pills"><em>No login</em><em>No sign-up</em><em>No email</em><em>Always free</em></span>
+          </div>
+        </div>
         <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:6px">
           <a href="#" data-goto="process" style="display:inline-flex;align-items:center;gap:10px;padding:17px 28px;border-radius:14px;background:#3965FA;color:#fff;font-size:16px;font-weight:700;box-shadow:0 10px 24px rgba(57,101,250,0.35)">
-            Print labels
+            Start printing, it's free
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
           <a href="#how-it-works" data-scroll="how-it-works" style="display:inline-flex;align-items:center;padding:17px 26px;border-radius:14px;border:1.5px solid rgba(153,183,252,0.5);color:#fff;font-size:16px;font-weight:700">See how it works</a>
@@ -138,7 +155,6 @@
             <div style="margin-top:auto;height:22px;border-radius:6px;background:#E9EBFF"></div>
           </div>
         </div>
-        <div style="position:absolute;left:0;bottom:34px;display:flex;align-items:center;gap:10px;padding:9px 18px 9px 10px;border-radius:999px;background:#fff;color:#1B1B39;font-size:14px;font-weight:800;box-shadow:0 14px 30px rgba(0,0,0,0.35)"><span style="width:26px;height:26px;border-radius:50%;background:#047857;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span>4 labels per page</div>
       </div>
     </section>
 
@@ -359,14 +375,6 @@
             </select>
           </div>
           <div class="form-group">
-            <span class="field-label" id="paper-label">Paper</span>
-            <div class="segmented" role="radiogroup" aria-labelledby="paper-label">
-              <label><input type="radio" name="process-paper" value="A4" checked><span>A4</span></label>
-              <label><input type="radio" name="process-paper" value="Letter"><span>Letter</span></label>
-              <label><input type="radio" name="process-paper" value="Legal"><span>Legal</span></label>
-            </div>
-          </div>
-          <div class="form-group">
             <span class="field-label">Cut marks</span>
             <label class="switch" for="process-cut-marks">
               <input type="checkbox" id="process-cut-marks" checked>
@@ -430,15 +438,6 @@
         <h3 class="card-title">Application Defaults</h3>
         <div class="form-row">
           <div class="form-group">
-            <label for="setting-default-paper">Default Paper Size</label>
-            <select id="setting-default-paper">
-              <option value="A4" selected>A4</option>
-              <option value="Letter">Letter</option>
-              <option value="Legal">Legal</option>
-            </select>
-          </div>
-
-          <div class="form-group">
             <label for="setting-default-mode">Default Output Mode</label>
             <select id="setting-default-mode">
               <option value="A4 Sheet (4-up Grid)" selected>A4 Sheet (4-Up Grid)</option>
@@ -471,30 +470,77 @@
     </section>
 
     <!-- 7. ABOUT VIEW -->
-    <section id="view-about" class="view">
-      <div class="page-header">
-        <div>
-          <h1 class="page-title">About TrimLabel</h1>
-          <p class="page-desc">Version 1.0.0 (Web Studio Edition)</p>
+    <section id="view-about" class="view about">
+
+      <header class="ab-intro">
+        <span class="ab-eyebrow">About TrimLabel</span>
+        <h1 class="ab-title">Small sellers deserve big-business tools.</h1>
+        <p class="ab-lead">Behind every parcel is a person who packed it, often late at night, often by themselves. We built TrimLabel so that the paperwork never slows them down.</p>
+      </header>
+
+      <div class="ab-free">
+        <span class="ab-free-icon"><svg class="icon"><use href="#i-heart"/></svg></span>
+        <div class="ab-free-text">
+          <b>Free. For everyone. For good.</b>
+          <span>No price tag, no trial, no login, no email. TrimLabel is a free tool for the people who keep online shopping moving.</span>
         </div>
       </div>
 
-      <div class="card">
-        <h3 class="card-title">TrimLabel — E-Commerce Label Manager</h3>
-        <p class="page-desc" style="margin-top: 0; max-width: none;">
-          TrimLabel is a professional web application built for Flipkart, Meesho, Amazon, Shiprocket, and custom marketplace shipping label automation.<br><br>
-          Features 100% offline client-side vector PDF cropping, HTML5 interactive crop template learning, smart marketplace detection, and instant A4 grid sheet assembly. Zero installation required.
-        </p>
-      </div>
+      <section class="ab-block">
+        <span class="ab-kicker">Our mission</span>
+        <p class="ab-mission">To take the hassle out of shipping, so every seller can spend their time on what they love: their products and their customers.</p>
+      </section>
 
-      <div class="card">
-        <h3 class="card-title">Need a new label layout?</h3>
-        <p class="page-desc" style="margin-top: 0; max-width: none;">
-          Using a courier or marketplace we don't support yet, or have a custom label format? Email a sample PDF (remove any customer details first) to
-          <a href="mailto:swill8580@gmail.com?subject=TrimLabel%20template%20request">swill8580@gmail.com</a>
-          and we'll try to add it.
-        </p>
-      </div>
+      <section class="ab-block">
+        <span class="ab-kicker">What we believe</span>
+        <div class="ab-grid">
+          <div class="ab-card">
+            <span class="ab-ico"><svg class="icon"><use href="#i-scale"/></svg></span>
+            <b>The same quality for everyone</b>
+            <span>The tool that helps a home business should be as good as the one a warehouse uses.</span>
+          </div>
+          <div class="ab-card">
+            <span class="ab-ico"><svg class="icon"><use href="#i-shield"/></svg></span>
+            <b>Your data is yours</b>
+            <span>Your orders and customer details stay on your device. We never see them.</span>
+          </div>
+          <div class="ab-card">
+            <span class="ab-ico"><svg class="icon"><use href="#i-zap"/></svg></span>
+            <b>Simple wins</b>
+            <span>If it takes more than three steps, we haven't finished designing it.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="ab-block">
+        <span class="ab-kicker">Who we're here for</span>
+        <div class="ab-grid">
+          <div class="ab-card">
+            <span class="ab-ico"><svg class="icon"><use href="#i-home"/></svg></span>
+            <b>Home-based sellers</b>
+            <span>Who pack orders at the kitchen table.</span>
+          </div>
+          <div class="ab-card">
+            <span class="ab-ico"><svg class="icon"><use href="#i-store"/></svg></span>
+            <b>Small shops</b>
+            <span>Growing one order at a time.</span>
+          </div>
+          <div class="ab-card">
+            <span class="ab-ico"><svg class="icon"><use href="#i-box"/></svg></span>
+            <b>Packing teams</b>
+            <span>Who need hundreds of labels done before the courier arrives.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="ab-contact">
+        <div>
+          <h2>Shaped by sellers</h2>
+          <p>Tell us what is slowing you down, or send a label layout we don't support yet (please remove any customer details first). We read every message.</p>
+        </div>
+        <a class="btn btn-light" id="btn-contact" href="mailto:swill8580@gmail.com?subject=TrimLabel%20feedback"><svg class="icon"><use href="#i-mail"/></svg>Get in touch</a>
+      </section>
+
     </section>
 
   </main>

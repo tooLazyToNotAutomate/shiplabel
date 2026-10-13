@@ -30,9 +30,9 @@ Pages.home = {
 
     root.append(
       h("section", { class: "hero" },
-        h("span", { class: "hero-tag" }, "Free · Private · Offline"),
+        h("span", { class: "hero-tag" }, "Free · No login · No sign-up"),
         h("h2", {}, "Shipping labels, print-ready in seconds."),
-        h("p", {}, "Drop your PDFs. We trim and arrange them for printing."),
+        h("p", {}, "Drop your PDFs. We trim and arrange them for printing. No account or email needed."),
         h("button", { class: "btn", id: "home-start-btn", onclick: () => App.show("process") }, "Print labels", icon("arrow"))
       ),
 

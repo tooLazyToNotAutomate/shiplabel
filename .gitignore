@@ -30,3 +30,6 @@ keystore.properties
 !android/native/app/debug.keystore
 
 android/native/keystore.properties
+
+# archived features kept for the future (local only)
+upcoming-features/

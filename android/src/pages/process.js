@@ -27,7 +27,7 @@ Pages.process = {
     const templates = window.templateManager.getAll();
     let files = [];
     let tmplId = templates[0] && templates[0].id;
-    let mode = s.defaultMode, paper = s.paperSize, cutMarks = s.cutMarks;
+    let mode = s.defaultMode, cutMarks = s.cutMarks;
 
     const list = h("div", {});
     const input = h("input", { type: "file", accept: "application/pdf,.pdf", multiple: true, hidden: true });
@@ -64,7 +64,7 @@ Pages.process = {
           bytes = await PDFEngine.exportThermal(cropped, mode); ext = "pdf"; mime = "application/pdf";
         } else {
           const rows = 2, cols = mode.includes("6-up") ? 3 : mode.includes("2-up") ? 1 : 2;
-          bytes = await PDFEngine.exportGrid(cropped, rows, cols, paper, cutMarks); ext = "pdf"; mime = "application/pdf";
+          bytes = await PDFEngine.exportGrid(cropped, rows, cols, "A4", cutMarks); ext = "pdf"; mime = "application/pdf";
         }
         HistoryLog.add({ marketplace: tmpl.marketplace, filesCount: files.length, mode });
         await Native.saveAndShare(bytes, `TrimLabel_${part}_${files.length}_Labels.${ext}`, mime);
@@ -89,8 +89,6 @@ Pages.process = {
         selectField("Crop template", templates.map(t => ({ value: t.id, label: `${t.name} (${t.marketplace})` })), tmplId, v => (tmplId = v)),
         h("span", { class: "field-title" }, "Layout"),
         choiceGrid("layouts", "layout-card", LAYOUT_CARDS, () => mode, v => (mode = v)),
-        h("span", { class: "field-title" }, "Paper"),
-        choiceGrid("seg", "", Security.PAPER_SIZES.map(p => ({ value: p, title: p })), () => paper, v => (paper = v)),
         h("label", { class: "switch-row" }, "Draw cut marks",
           h("input", { type: "checkbox", checked: cutMarks, onchange: e => (cutMarks = e.target.checked) }))
       ),

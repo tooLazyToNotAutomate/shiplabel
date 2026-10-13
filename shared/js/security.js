@@ -18,7 +18,6 @@ const Security = {
     "Thermal 3x5", "Thermal 4x6", "A4 Sheet (4-up Grid)", "A4 Sheet (6-up Grid)",
     "A4 Sheet (2-up Grid)", "PNG ZIP"
   ],
-  PAPER_SIZES: ["A4", "Letter", "Legal"],
 
   /** Escape text for safe use in HTML (defence in depth; prefer textContent). */
   escapeHtml(value) {

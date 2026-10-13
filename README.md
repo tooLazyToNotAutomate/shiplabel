@@ -11,6 +11,12 @@ TrimLabel runs as a **100% client-side Web Studio** in your browser, and as an *
 
 ---
 
+## Free to use
+
+The app is **100% free**. There is no login, no sign-up, no email and no account of any kind. Open it and print. Files are processed on your own device and are never uploaded.
+
+---
+
 ## Why TrimLabel Studio?
 
 Managing shipping labels from multiple e-commerce platforms often involves tedious manual cropping, awkward PDF layouts, and wasted paper. Existing online converters often require uploading customer address data to third-party servers, posing privacy and data security risks.
@@ -153,6 +159,16 @@ LABELPDF/
 ```
 
 Run from the right folder: `python web/server.py` (web), `cd android && npm run apk` (Android).
+
+---
+
+## Archived features
+
+Features that were removed from the live apps but kept for later live in `upcoming-features/` (listed in `.gitignore`, so the folder stays on your machine only). Each folder has its own README with restore steps.
+
+| Folder | Feature | Why archived |
+| :--- | :--- | :--- |
+| `upcoming-features/paper-sizes/` | Letter and Legal paper sizes | Output is now A4 only (plus thermal 3x5 / 4x6) to keep the flow simple |
 
 ---
 
