@@ -1,3 +1,5 @@
+> **ARCHIVED.** The Android app is on hold. Paths below assume the original layout (`android/`, `scripts/`); see `../README.md` to restore.
+
 # Releasing TrimLabel (Android)
 
 Two update channels, one signed manifest.

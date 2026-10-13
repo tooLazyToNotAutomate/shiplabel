@@ -1,9 +1,8 @@
-android/
+archive/
 outputs/
 node_modules/
 README.md
 *.pdf
 web/server.py
 .ota-keys/
-RELEASING.md
-OTA_APK_UPDATE_TEMPLATE_PROMPT.md
+PROJECT.md

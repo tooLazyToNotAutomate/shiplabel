@@ -1025,7 +1025,7 @@ canvas {
 }
 
 @media (max-width: 900px) {
-  /* Android 3-button nav bars often report no safe-area inset, so reserve a minimum */
+  /* Phone 3-button navigation bars often report no safe-area inset, so reserve a minimum */
   :root {
     --safe-bottom: max(env(safe-area-inset-bottom, 0px), 56px);
   }

@@ -3,7 +3,6 @@
   "private": true,
   "scripts": {
     "build:web": "node scripts/build.js web",
-    "build:android": "node scripts/build.js android",
     "serve:web": "python web/server.py"
   }
 }

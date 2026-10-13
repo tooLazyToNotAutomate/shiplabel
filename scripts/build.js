@@ -1,19 +1,17 @@
 // Assembles a deployable bundle by combining a platform folder with shared/.
 //   node scripts/build.js web      -> dist/web      (Vercel / static hosting)
-//   node scripts/build.js android  -> android/www   (Capacitor webDir)
 const fs = require("fs");
 const path = require("path");
 
 const root = path.resolve(__dirname, "..");
 const targets = {
   web: { src: path.join(root, "web"), out: path.join(root, "dist", "web"), skip: ["server.py"] },
-  android: { src: path.join(root, "android", "src"), out: path.join(root, "android", "www"), skip: [] },
 };
 
 const name = process.argv[2];
 const t = targets[name];
 if (!t) {
-  console.error("Usage: node scripts/build.js <web|android>");
+  console.error("Usage: node scripts/build.js <web>");
   process.exit(1);
 }
 

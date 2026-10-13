@@ -1,3 +1,5 @@
+> **ARCHIVED.** This app is on hold and is not built or deployed. See `../README.md` for how to restore it.
+
 # TrimLabel Studio — Android app
 
 Capacitor wrapper around the shared JS label engine, with a mobile-first UI of its own.

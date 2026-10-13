@@ -10,14 +10,14 @@ imges,notes.docs/
 
 # build output
 dist/
-android/www/
-android/node_modules/
-android/native/local.properties
-android/native/build/
-android/native/app/build/
-android/native/.gradle/
-android/native/capacitor-cordova-android-plugins/
-!android/native/app/src/main/res/**/*.png
+archive/android/www/
+archive/android/node_modules/
+archive/android/native/local.properties
+archive/android/native/build/
+archive/android/native/app/build/
+archive/android/native/.gradle/
+archive/android/native/capacitor-cordova-android-plugins/
+!archive/android/native/app/src/main/res/**/*.png
 
 # release secrets
 .ota-keys/
@@ -27,12 +27,15 @@ keystore.properties
 *.apk
 .env
 .env.*
-!android/native/app/debug.keystore
+!archive/android/native/app/debug.keystore
 
-android/native/keystore.properties
+archive/android/native/keystore.properties
 
 # archived features kept for the future (local only)
 upcoming-features/
 
 # web icons must be tracked
 !web/apple-touch-icon.png
+
+# internal project notes (local only)
+PROJECT.md
