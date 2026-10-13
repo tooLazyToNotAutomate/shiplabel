@@ -1629,3 +1629,22 @@ canvas {
 
 /* Logo mark sits at 62% of its box, so draw it larger than a plain icon */
 .brand-icon .icon { width: 28px; height: 28px; }
+
+/* ───────── Phone fixes: footer gap, static print bar, compact history ───────── */
+@media (max-width: 900px) {
+  /* Less dead space under the last element; still clears the phone navigation bar */
+  #main-content { flex: 1 0 auto; padding-bottom: calc(16px + var(--safe-bottom)); }
+
+  /* Home: on short pages the footer sits at the bottom of the screen instead of floating mid-page */
+  #view-dashboard.active { flex: 1 0 auto; }
+  #view-dashboard .m-footer { margin-top: auto; }
+
+  /* Print bar flows with the page (no longer floats over the options) */
+  .action-bar { position: static; box-shadow: none; }
+
+  /* Activity table fits the screen without sideways scrolling */
+  #view-history .card { padding: 12px; }
+  .history-table { min-width: 0; font-size: 12px; }
+  .history-table th { white-space: normal; padding: 10px 6px; font-size: 10px; letter-spacing: 0.02em; }
+  .history-table td { padding: 10px 6px; overflow-wrap: anywhere; }
+}
