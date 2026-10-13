@@ -39,3 +39,6 @@ upcoming-features/
 
 # internal project notes (local only)
 PROJECT.md
+
+# parked code kept locally (Android app etc.)
+archive/
