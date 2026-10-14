@@ -34,6 +34,9 @@ class App {
     this.bindSettings();
 
     this.renderHistory();
+
+    // Landing pages link to /#print to open the tool directly
+    if (window.location.hash === "#print") this.switchView("process");
   }
 
   // Settings Storage
