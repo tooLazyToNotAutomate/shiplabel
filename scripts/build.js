@@ -29,4 +29,5 @@ function copy(from, to, skip = []) {
 fs.rmSync(t.out, { recursive: true, force: true });
 copy(t.src, t.out, t.skip);
 copy(path.join(root, "shared"), path.join(t.out, "shared"));
+require("./seo").generate(t.out);
 console.log(`Built ${name} -> ${path.relative(root, t.out)}`);
