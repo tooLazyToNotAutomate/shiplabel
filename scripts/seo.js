@@ -199,6 +199,7 @@ function renderPage(p) {
       mainEntity: faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
     },
   ];
+  const toc = [...p.sections.map(([h], i) => [`s${i + 1}`, h]), ["how", "How to do it"], ["faq", "FAQ"], ["related", "Related guides"]];
   const related = p.related
     .map((s) => `<li><a href="/${s}">${esc(PAGE_BY_SLUG[s].h1)}</a></li>`)
     .join("");
@@ -220,25 +221,58 @@ function renderPage(p) {
   <meta name="twitter:card" content="summary">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/shared/legal/legal.css">
   <link rel="stylesheet" href="/seo.css">
   <script type="application/ld+json">${json(ld)}</script>
 </head>
 <body>
-  <header class="top"><a class="brand" href="/">${NAME}</a><a class="cta" href="/#print">Open the free tool</a></header>
-  <main>
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">${NAME}</a> / <span>${esc(p.h1)}</span></nav>
-    <h1>${esc(p.h1)}</h1>
-    <p class="answer">${esc(p.answer)}</p>
-    <p><a class="btn" href="/#print">Trim my labels, it's free</a></p>
-${p.sections.map(([h, t]) => `    <h2>${esc(h)}</h2>\n    <p>${esc(t)}</p>`).join("\n")}
-    <h2>How to do it</h2>
-    <ol>${p.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol>
-    <h2>Frequently asked questions</h2>
-${faq.map(([q, a]) => `    <h3>${esc(q)}</h3>\n    <p>${esc(a)}</p>`).join("\n")}
-    <h2>Related guides</h2>
-    <ul>${related}</ul>
-  </main>
-  <footer><a href="/">${NAME}</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/disclaimer">Disclaimer</a></footer>
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="brand-mark"><svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22V13a1 1 0 0 1 1-1h9M42 12h9a1 1 0 0 1 1 1v9M52 42v9a1 1 0 0 1-1 1h-9M22 52h-9a1 1 0 0 1-1-1v-9" stroke="#99B7FC" stroke-width="4.5"/><path d="M22 23h20M32 23v19" stroke="#fff" stroke-width="6"/></svg></span>
+      ${NAME}
+    </a>
+    <a class="back" href="/#print">Open the free tool</a>
+  </header>
+
+  <div class="wrap">
+    <nav class="toc" aria-label="On this page">
+      <b>On this page</b>
+${toc.map(([id, label]) => `      <a href="#${id}">${esc(label)}</a>`).join("\n")}
+    </nav>
+
+    <article>
+      <span class="eyebrow">Guide</span>
+      <h1>${esc(p.h1)}</h1>
+      <p class="meta">Free tool &middot; No login &middot; Files stay on your device</p>
+
+      <div class="summary">
+        <b>The short answer</b>
+        <p>${esc(p.answer)}</p>
+      </div>
+      <p><a class="btn" href="/#print">Trim my labels, it's free</a></p>
+
+${p.sections.map(([h, t], i) => `      <h2 id="s${i + 1}">${esc(h)}</h2>
+      <p>${esc(t)}</p>`).join("\n\n")}
+
+      <h2 id="how">How to do it</h2>
+      <ol>${p.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol>
+
+      <h2 id="faq">Frequently asked questions</h2>
+${faq.map(([q, a]) => `      <h3>${esc(q)}</h3>
+      <p>${esc(a)}</p>`).join("\n")}
+
+      <h2 id="related">Related guides</h2>
+      <ul>${related}</ul>
+    </article>
+  </div>
+
+  <nav class="legal-nav" aria-label="Site links">
+    <a href="/">${NAME}</a>
+    <a href="/privacy">Privacy Policy</a>
+    <a href="/terms">Terms of Use</a>
+    <a href="/disclaimer">Disclaimer</a>
+    <span>&copy; 2026 ${NAME}</span>
+  </nav>
 </body>
 </html>
 `;

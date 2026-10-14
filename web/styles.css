@@ -1648,3 +1648,14 @@ canvas {
   .history-table th { white-space: normal; padding: 10px 6px; font-size: 10px; letter-spacing: 0.02em; }
   .history-table td { padding: 10px 6px; overflow-wrap: anywhere; }
 }
+
+/* Home FAQ accordion (native <details>, no JS) */
+.faq-list { display: flex; flex-direction: column; gap: 12px; max-width: 640px; margin: 0; }
+.faq-item { background: #E9EBFF; border-radius: 20px; transition: background .2s; }
+.faq-item[open] { background: #fff; border: 1.5px solid #DDE0F2; box-shadow: 0 8px 24px rgba(27,27,57,0.06); }
+.faq-item summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 16px 16px 22px; font-size: 16px; font-weight: 700; color: #1B1B39; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: "+"; flex: none; width: 36px; height: 36px; border-radius: 50%; background: #fff; display: grid; place-items: center; font-size: 22px; font-weight: 500; line-height: 1; color: #1B1B39; }
+.faq-item[open] summary::after { content: "\00d7"; background: #E9EBFF; }
+.faq-item p { margin: 0; padding: 0 22px 20px; color: #4A4D6B; font-size: 15px; line-height: 1.6; }
+.faq-item summary:focus-visible { outline: 2px solid #3965FA; outline-offset: 2px; border-radius: 20px; }

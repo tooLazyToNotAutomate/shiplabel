@@ -1,17 +1,3 @@
-:root { --navy: #1b1b39; --blue: #3965fa; --pale: #e9ebff; --text: #1b1b39; --muted: #4a4d6b; }
-* { box-sizing: border-box; }
-body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--text); background: #fff; line-height: 1.65; }
-a { color: var(--blue); }
-.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 24px; background: var(--navy); }
-.brand { color: #fff; font-weight: 800; font-size: 20px; text-decoration: none; }
-.cta, .btn { background: var(--blue); color: #fff; font-weight: 700; text-decoration: none; padding: 10px 18px; border-radius: 12px; display: inline-block; }
-.btn { padding: 14px 24px; }
-main { max-width: 760px; margin: 0 auto; padding: 24px 20px 56px; }
-.crumbs { font-size: 14px; color: var(--muted); }
-h1 { font-size: 34px; line-height: 1.15; letter-spacing: -0.6px; margin: 16px 0; }
-h2 { font-size: 24px; margin: 36px 0 8px; }
-h3 { font-size: 18px; margin: 20px 0 4px; }
-.answer { font-size: 19px; background: var(--pale); border-radius: 16px; padding: 18px 20px; }
-li { margin: 6px 0; }
-footer { text-align: center; padding: 24px 20px; color: var(--muted); font-size: 14px; border-top: 1px solid #ddd; }
-@media (max-width: 600px) { h1 { font-size: 27px; } }
+/* Landing pages reuse /shared/legal/legal.css; this adds only the call-to-action button. */
+.btn { display: inline-block; background: var(--blue); color: #fff; font-weight: 700; text-decoration: none; padding: 14px 24px; border-radius: 14px; }
+.btn:hover { background: var(--blue-dark); color: #fff; }
